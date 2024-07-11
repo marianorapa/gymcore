@@ -1,0 +1,24 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: "jdbc:postgresql://db:5432/yourdbname"
+      SPRING_DATASOURCE_USERNAME: "yourdbuser"
+      SPRING_DATASOURCE_PASSWORD: "yourdbpassword"
+    depends_on:
+      - db
+
+  db:
+    image: postgres:13
+    environment:
+      POSTGRES_DB: "gymcore"
+      POSTGRES_USER: "yourdbuser"
+      POSTGRES_PASSWORD: "yourdbpassword"
+    ports:
+      - "5423:5432"
