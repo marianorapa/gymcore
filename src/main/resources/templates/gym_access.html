@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Sistema de Acceso al Gimnasio</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-image: url("https://t4.ftcdn.net/jpg/08/09/48/25/360_F_809482598_iFY3RUsAXrpaJAuFh2UijLuLhGMQYJDb.jpg");
+            background-size: cover;
+            color: #333;
+        }
+        .container {
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 40px 20px 60px 20px;
+            text-align: center;
+            width: 90%;
+            max-width: 400px;
+        }
+        .logo {
+            height: 15em;
+            margin-bottom: 5px;
+        }
+        h1 {
+            font-size: 22px;
+            margin-bottom: 20px;
+            color: #333;
+        }
+        .form-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .form-container input {
+            padding: 12px;
+            margin: 10px 0;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        .form-container button {
+            padding: 12px 20px;
+            font-size: 16px;
+            color: #fff;
+            background-color: #ec9021;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        .form-container button:hover {
+            background-color: #e17f06;
+        }
+        .message {
+            padding: 12px;
+            margin-top: 20px;
+            font-size: 18px;
+            color: #fff;
+            border-radius: 4px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        .access-granted {
+            background-color: #28a745;
+        }
+        .access-denied {
+            background-color: #dc3545;
+        }
+    </style>
+</head>
+<body>
+<div class="container background">
+    <img class="logo" src="https://img.freepik.com/vector-premium/logotipo-letra-barra-logotipo-fitness-gym-diseno-logotipo-vectorial-fitness-gimnasio-fitness_227744-337.jpg" alt="Gym Logo">
+    <div class="form-container">
+        <form th:action="@{/check-access}" method="post">
+            <input type="password" name="userId" placeholder="Ingrese su PIN" required autofocus/>
+            <button type="submit">Ingresar</button>
+        </form>
+        <div id="message" class="message" th:classappend="${accessStatus != null ? (accessStatus ? ' access-granted' : ' access-denied') : ''}" th:styleappend="${showMessage ? '' : 'display:none;'}" th:text="${accessMessage != null ? accessMessage : ''}"></div>
+    </div>
+</div>
+
+<audio id="success-sound" src="success.mp3"></audio>
+<audio id="error-sound" src="error.mp3"></audio>
+
+<script>
+    /*<![CDATA[*/
+
+    document.addEventListener("DOMContentLoaded", function() {
+        const messageDiv = document.getElementById('message');
+        const successSound = document.getElementById('success-sound');
+        const errorSound = document.getElementById('error-sound');
+        const accessStatus = [[${accessStatus}]];
+
+        if (messageDiv.textContent.trim() !== '') {
+            messageDiv.style.display = 'block';
+
+            if (accessStatus) {
+                successSound.play();
+                setTimeout(() => {
+                    messageDiv.style.display = 'none';
+                }, 5000);
+            } else {
+                errorSound.play();
+                setTimeout(() => {
+                    messageDiv.style.display = 'none';
+                }, 10000);
+            }
+        }
+
+    });
+    /*]]>*/
+
+</script>
+</body>
+</html>
