@@ -1,6 +1,7 @@
-package com.mrapaport.gymcore.users;
+package com.mrapaport.gymcore.users.model;
 
 import com.mrapaport.gymcore.common.BaseEntity;
+import com.mrapaport.gymcore.usage.UsageService;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -17,4 +18,12 @@ public class User extends BaseEntity {
 
     @Column(name = "username", length = 50)
     private String username;
+
+    @Column(name = "dni", unique = true, nullable = false)
+    private String dni;
+
+    public boolean hasValidAccess(UsageService usageService) {
+        var currentQuota = usageService.getCurrentUsageQuota(this);
+        return currentQuota.isPresent();
+    }
 }

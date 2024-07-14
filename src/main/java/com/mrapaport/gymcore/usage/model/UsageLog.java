@@ -1,6 +1,7 @@
-package com.mrapaport.gymcore.usage;
+package com.mrapaport.gymcore.usage.model;
 
 import com.mrapaport.gymcore.common.BaseEntity;
+import com.mrapaport.gymcore.users.model.User;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -13,9 +14,17 @@ import java.util.UUID;
 @EqualsAndHashCode(callSuper = true)
 public class UsageLog extends BaseEntity {
 
-    @Column(name = "user_id")
-    private UUID userId;
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
 
     @Column(name = "valid_quota", nullable = false)
     private boolean validQuota;
+
+    public static UsageLog forUser(User user, Boolean validAccess) {
+        var log = new UsageLog();
+        log.user = user;
+        log.validQuota = validAccess;
+        return log;
+    }
 }
