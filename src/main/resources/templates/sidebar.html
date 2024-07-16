@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<div th:fragment="sidebar">
+    <div class="sidebar">
+        <div class="sidebar-header">Spot GYM</div>
+        <a href="/register-client" class="d-flex align-items-center">
+            <i class="fas fa-user-plus mr-2"></i>Registrar Cliente
+        </a>
+        <a href="/list-clients" class="d-flex align-items-center">
+            <i class="fas fa-list mr-2"></i>Ver Clientes
+        </a>
+        <a href="/add-payment" class="d-flex align-items-center">
+            <i class="fas fa-dollar-sign mr-2"></i>Registrar Pago
+        </a>
+    </div>
+</div>
+</body>
+</html>
