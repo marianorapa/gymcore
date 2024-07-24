@@ -27,4 +27,11 @@ public class UserService {
         return user;
     }
 
+    public User registerClient(String username, String dni) {
+        if (!User.isValid(repository, username, dni)) {
+            throw new IllegalArgumentException("Invalid user info");
+        }
+
+        return User.saveNew(repository, username, dni);
+    }
 }

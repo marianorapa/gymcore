@@ -9,6 +9,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 @Controller
 public class UserController {
 
+    private UserService userService;
+
+    public UserController(UserService service) {
+        userService = service;
+    }
+
     @GetMapping("/register-client")
     public String showRegisterClientForm(Model model) {
         return "register_client";
@@ -18,12 +24,10 @@ public class UserController {
     public String registerClient(@RequestParam("username") String username,
                                  @RequestParam("dni") String dni,
                                  Model model) {
-        // Add logic to save the new client
-        // For example: clientService.save(new Client(username, dni));
+        var user = userService.registerClient(username, dni);
 
-        // Add a success message or redirect to another page
-        model.addAttribute("message", "Cliente registrado exitosamente");
-        return "redirect:/register-client";
+        model.addAttribute("message", "Cliente registrado. Pin de acceso: " + user.getPin());
+        return "register_client";
     }
 
 }

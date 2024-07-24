@@ -10,5 +10,6 @@ public interface UserRepository extends JpaRepository<User, UUID> {
 
     Optional<User> findByDni(String dni);
     Optional<User> findByPin(Integer pin);
+    Optional<User> findByUsername(String username);
 
 }
