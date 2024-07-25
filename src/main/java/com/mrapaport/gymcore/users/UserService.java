@@ -17,6 +17,10 @@ public class UserService {
 
     }
 
+    public Optional<User> findByDni(String dni) {
+        return repository.findByDni(dni);
+    }
+
     public Optional<User> findByUserId(String userId) {
         var user = repository.findByDni(userId);
 

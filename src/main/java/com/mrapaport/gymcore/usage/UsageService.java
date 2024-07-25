@@ -34,4 +34,9 @@ public class UsageService {
     public Optional<UsageQuota> getCurrentUsageQuota(User user) {
         return repository.findQuotaForUser(user, LocalDateTime.now());
     }
+
+    public UsageQuota newQuotaForUser(User user, LocalDateTime expiryDate) {
+       var quota = UsageQuota.builder().user(user).validUntil(expiryDate).build();
+       return repository.save(quota);
+    }
 }
