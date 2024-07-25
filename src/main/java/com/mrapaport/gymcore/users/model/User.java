@@ -41,7 +41,7 @@ public class User extends BaseEntity {
     }
 
     public static boolean isValid(UserRepository repository, String username, String dni) {
-        return repository.findByDni(dni).isEmpty() && repository.findByUsername(username).isEmpty();
+        return repository.findByDni(dni).isEmpty();
     }
 
     public boolean hasValidAccess(UsageService usageService) {
