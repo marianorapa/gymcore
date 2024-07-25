@@ -1,6 +1,8 @@
 package com.mrapaport.gymcore.users;
 
 import com.mrapaport.gymcore.users.model.User;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -37,5 +39,9 @@ public class UserService {
         }
 
         return User.saveNew(repository, username, dni);
+    }
+
+    public Page<User> getAllClients(Pageable pageable) {
+        return repository.findAll(pageable);
     }
 }
