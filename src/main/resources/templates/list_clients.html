@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Socios</title>
+    <title>Lista de Clientes</title>
     <link rel="stylesheet" th:href="@{/css/style.css}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
@@ -25,12 +25,13 @@
 <div th:replace="sidebar :: sidebar"></div>
 <div class="main-content">
     <div class="container">
-        <h1 class="text-center">Lista de Clientes</h1>
+        <h1 class="text-center">Socios</h1>
         <table class="table table-striped">
             <thead>
             <tr>
                 <th>Nombre</th>
                 <th>DNI</th>
+                <th>Pago hasta</th>
                 <th>Acciones</th>
             </tr>
             </thead>
@@ -38,6 +39,7 @@
             <tr th:each="client : ${clientPage.content}">
                 <td th:text="${client.username}"></td>
                 <td th:text="${client.dni}"></td>
+                <td th:text="${client.lastAccessQuota()?.validUntilPretty()}">N/A</td>
                 <td>
                     <a href="#" class="btn btn-sm btn-info">Ver</a>
                     <a href="#" class="btn btn-sm btn-warning">Editar</a>

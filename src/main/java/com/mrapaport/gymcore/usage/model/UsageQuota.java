@@ -5,13 +5,16 @@ import com.mrapaport.gymcore.users.model.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Data;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 @Entity
 @Table(name = "usage_quota")
 @Builder
 @AllArgsConstructor
+@Data
 public class UsageQuota extends BaseEntity {
 
     @ManyToOne
@@ -22,4 +25,9 @@ public class UsageQuota extends BaseEntity {
     private LocalDateTime validUntil;
 
     public UsageQuota() {}
+
+    public String validUntilPretty() {
+        return validUntil.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+    }
+
 }

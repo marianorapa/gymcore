@@ -2,12 +2,16 @@ package com.mrapaport.gymcore.users.model;
 
 import com.mrapaport.gymcore.common.BaseEntity;
 import com.mrapaport.gymcore.usage.UsageService;
+import com.mrapaport.gymcore.usage.model.UsageQuota;
 import com.mrapaport.gymcore.users.UserRepository;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.SortComparator;
 
+import java.util.Comparator;
+import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
 @Entity
@@ -24,6 +28,9 @@ public class User extends BaseEntity {
 
     @Column(name = "dni", unique = true, nullable = false)
     private String dni;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private List<UsageQuota> usageQuotas;
 
     public static User saveNew(UserRepository repository, String username, String dni) {
         var user = new User();
@@ -48,4 +55,11 @@ public class User extends BaseEntity {
         var currentQuota = usageService.getCurrentUsageQuota(this);
         return currentQuota.isPresent();
     }
+
+    public UsageQuota lastAccessQuota() {
+        return usageQuotas.stream().max(Comparator.comparing(UsageQuota::getValidUntil)).orElse(null);
+    }
+
+    
+
 }
