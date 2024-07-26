@@ -1,0 +1,1 @@
+ALTER TABLE payment_plans add column valid_until TIMESTAMP;

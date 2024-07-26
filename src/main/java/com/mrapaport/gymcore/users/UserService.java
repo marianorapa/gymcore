@@ -1,11 +1,13 @@
 package com.mrapaport.gymcore.users;
 
+import com.mrapaport.gymcore.payments.PaymentPlanService;
 import com.mrapaport.gymcore.users.model.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
+import java.util.UUID;
 
 import static com.mrapaport.gymcore.common.utils.IntegerUtils.isInt;
 
@@ -14,9 +16,11 @@ public class UserService {
 
     UserRepository repository;
 
-    public UserService(UserRepository repository) {
-        this.repository = repository;
+    PaymentPlanService paymentPlanService;
 
+    public UserService(UserRepository repository, PaymentPlanService paymentPlanService) {
+        this.repository = repository;
+        this.paymentPlanService = paymentPlanService;
     }
 
     public Optional<User> findByDni(String dni) {
@@ -33,12 +37,13 @@ public class UserService {
         return user;
     }
 
-    public User registerClient(String username, String dni) {
-        if (!User.isValid(repository, username, dni)) {
+    public User registerClient(String username, String dni, UUID paymentPlanId) {
+        if (!User.isValid(repository, dni)) {
             throw new IllegalArgumentException("Invalid user info");
         }
 
-        return User.saveNew(repository, username, dni);
+        var optPlan = paymentPlanService.findById(paymentPlanId);
+        return optPlan.map(plan -> User.saveNew(repository, username, dni, plan)).orElseThrow();
     }
 
     public Page<User> getAllClients(Pageable pageable) {

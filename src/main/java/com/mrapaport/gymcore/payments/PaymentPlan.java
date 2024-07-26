@@ -6,6 +6,9 @@ import lombok.EqualsAndHashCode;
 
 import jakarta.persistence.*;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
 @Entity
 @Table(name = "payment_plans")
 @Data
@@ -20,4 +23,7 @@ public class PaymentPlan extends BaseEntity {
 
     @Column(name = "percent_discount")
     private Double percentDiscount;
+
+    @Column(name = "valid_until")
+    private LocalDateTime validUntil;
 }

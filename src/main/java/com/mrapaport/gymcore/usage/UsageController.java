@@ -21,7 +21,7 @@ public class UsageController {
     }
     @PostMapping("/check-access")
     public String checkAccess(@RequestParam("userId") String userId, Model model) {
-        boolean accessGranted = usageService.determineAccess(userId); // Your logic here
+        boolean accessGranted = usageService.determineAccess(userId);
         model.addAttribute("accessStatus", accessGranted);
         model.addAttribute("accessMessage", accessGranted ? "Acceso concedido" : "Acceso denegado");
         model.addAttribute("showMessage", true);

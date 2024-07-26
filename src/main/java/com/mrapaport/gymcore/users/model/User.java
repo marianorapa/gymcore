@@ -1,6 +1,7 @@
 package com.mrapaport.gymcore.users.model;
 
 import com.mrapaport.gymcore.common.BaseEntity;
+import com.mrapaport.gymcore.payments.PaymentPlan;
 import com.mrapaport.gymcore.usage.UsageService;
 import com.mrapaport.gymcore.usage.model.UsageQuota;
 import com.mrapaport.gymcore.users.UserRepository;
@@ -32,10 +33,15 @@ public class User extends BaseEntity {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<UsageQuota> usageQuotas;
 
-    public static User saveNew(UserRepository repository, String username, String dni) {
+    @ManyToOne
+    @JoinColumn(columnDefinition = "payment_plan_id")
+    private PaymentPlan paymentPlan;
+
+    public static User saveNew(UserRepository repository, String username, String dni, PaymentPlan paymentPlan) {
         var user = new User();
         user.dni = dni;
         user.username = username;
+        user.paymentPlan = paymentPlan;
         user.pin = generatePin();
         while (repository.findByPin(user.pin).isPresent()) {
             user.pin = generatePin();
@@ -47,7 +53,7 @@ public class User extends BaseEntity {
         return ThreadLocalRandom.current().nextInt(1000, 9999 + 1);
     }
 
-    public static boolean isValid(UserRepository repository, String username, String dni) {
+    public static boolean isValid(UserRepository repository, String dni) {
         return repository.findByDni(dni).isEmpty();
     }
 
@@ -60,6 +66,6 @@ public class User extends BaseEntity {
         return usageQuotas.stream().max(Comparator.comparing(UsageQuota::getValidUntil)).orElse(null);
     }
 
-    
+
 
 }
