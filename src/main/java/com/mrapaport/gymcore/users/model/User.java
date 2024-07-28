@@ -1,7 +1,7 @@
 package com.mrapaport.gymcore.users.model;
 
 import com.mrapaport.gymcore.common.BaseEntity;
-import com.mrapaport.gymcore.payments.PaymentPlan;
+import com.mrapaport.gymcore.payments.model.PaymentPlan;
 import com.mrapaport.gymcore.usage.UsageService;
 import com.mrapaport.gymcore.usage.model.UsageQuota;
 import com.mrapaport.gymcore.users.UserRepository;
@@ -9,7 +9,6 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import jakarta.persistence.*;
-import org.hibernate.annotations.SortComparator;
 
 import java.util.Comparator;
 import java.util.List;

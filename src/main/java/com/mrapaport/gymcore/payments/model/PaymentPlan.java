@@ -1,4 +1,4 @@
-package com.mrapaport.gymcore.payments;
+package com.mrapaport.gymcore.payments.model;
 
 import com.mrapaport.gymcore.common.BaseEntity;
 import lombok.Data;
@@ -20,9 +20,6 @@ public class PaymentPlan extends BaseEntity {
 
     @Column(name = "plan_description", length = 255)
     private String planDescription;
-
-    @Column(name = "percent_discount")
-    private Double percentDiscount;
 
     @Column(name = "valid_until")
     private LocalDateTime validUntil;

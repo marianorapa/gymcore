@@ -1,5 +1,6 @@
 package com.mrapaport.gymcore.payments;
 
+import com.mrapaport.gymcore.payments.model.Payment;
 import com.mrapaport.gymcore.usage.UsageService;
 import com.mrapaport.gymcore.users.UserService;
 import com.mrapaport.gymcore.users.exception.UserNotFoundException;

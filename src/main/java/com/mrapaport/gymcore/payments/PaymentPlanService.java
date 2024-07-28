@@ -1,5 +1,6 @@
 package com.mrapaport.gymcore.payments;
 
+import com.mrapaport.gymcore.payments.model.PaymentPlan;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;

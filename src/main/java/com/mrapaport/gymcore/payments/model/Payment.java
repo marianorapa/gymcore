@@ -1,6 +1,7 @@
-package com.mrapaport.gymcore.payments;
+package com.mrapaport.gymcore.payments.model;
 
 import com.mrapaport.gymcore.common.BaseEntity;
+import com.mrapaport.gymcore.payments.model.enums.PaymentStatus;
 import com.mrapaport.gymcore.users.model.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -8,6 +9,8 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import jakarta.persistence.*;
+
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
@@ -22,11 +25,19 @@ public class Payment extends BaseEntity {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @Column(name = "payment_plan_id")
-    private UUID paymentPlanId;
+    @ManyToOne
+    @JoinColumn(name = "payment_plan_id")
+    private PaymentPlan paymentPlan;
 
     @Column(name = "amount")
     private Double amount;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status")
+    private PaymentStatus status;
+
+    @Column(name = "due_date")
+    private LocalDateTime dueDate;
 
     public Payment() {}
 }
