@@ -1,15 +1,21 @@
 package com.mrapaport.gymcore.payments;
 
 import com.mrapaport.gymcore.payments.model.Payment;
+import com.mrapaport.gymcore.payments.model.enums.PaymentStatus;
 import com.mrapaport.gymcore.usage.UsageService;
 import com.mrapaport.gymcore.users.UserService;
 import com.mrapaport.gymcore.users.exception.UserNotFoundException;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
+import org.flywaydb.core.api.configuration.Configuration;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.UUID;
 
 @Service
 public class PaymentService {
@@ -33,4 +39,15 @@ public class PaymentService {
             usageService.newQuotaForUser(user, LocalDateTime.of(expiryDate, LocalTime.now()));
         }, () -> { throw new UserNotFoundException(); });
     }
+
+    public Page<Payment> findByUserId(UUID userId, Pageable pageable) {
+        return repository.findByUserId(userId, pageable);
+    }
+
+    public Payment updatePaymentStatus(UUID paymentId, PaymentStatus status) {
+        Payment payment = repository.findById(paymentId).orElseThrow(() -> new EntityNotFoundException("Payment not found"));
+        payment.setStatus(status);
+        return repository.save(payment);
+    }
+
 }

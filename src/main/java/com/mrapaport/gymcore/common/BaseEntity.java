@@ -9,6 +9,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 import java.io.Serializable;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.UUID;
 
 @MappedSuperclass
@@ -28,4 +29,8 @@ public abstract class BaseEntity implements Serializable {
     @UpdateTimestamp
     @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
+
+    public String createdAtPretty() {
+        return createdAt.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+    }
 }

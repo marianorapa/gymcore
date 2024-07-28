@@ -1,5 +1,6 @@
 package com.mrapaport.gymcore.payments;
 
+import com.mrapaport.gymcore.payments.model.enums.PaymentStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -9,6 +10,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.UUID;
 
 @Controller
 public class PaymentController {
@@ -31,5 +33,12 @@ public class PaymentController {
 
         redirectAttributes.addFlashAttribute("message", "Pago registrado exitosamente para el usuario con DNI: " + userDni);
         return "redirect:/register-payment";
+    }
+
+
+    @PostMapping("/update-payment-status")
+    public String updatePaymentStatus(@RequestParam UUID paymentId, @RequestParam PaymentStatus status) {
+        var payment = paymentService.updatePaymentStatus(paymentId, status);
+        return "redirect:/user-info/" + payment.getUser().getId();
     }
 }

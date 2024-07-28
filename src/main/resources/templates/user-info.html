@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Información del Socio</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            display: flex;
+            background-color: #f8f9fa;
+        }
+        .main-content {
+            margin-left: 250px;
+            width: calc(100% - 250px);
+            padding: 20px;
+        }
+        .table-wrapper {
+            overflow-x: auto;
+        }
+        .status-buttons {
+            display: flex;
+            gap: 5px;
+        }
+    </style>
+</head>
+<body>
+<div th:replace="sidebar :: sidebar"></div>
+<div class="main-content">
+    <div class="container">
+        <h2 class="text-center">Información del Socio</h2>
+        <div class="mb-4">
+            <p><strong>Nombre de Usuario:</strong> <span th:text="${user.username}"></span></p>
+            <p><strong>Socio desde:</strong> <span th:text="${user.createdAtPretty()}"></span></p>
+        </div>
+        <h3 class="text-center">Pagos</h3>
+        <div class="table-wrapper">
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th>Fecha de Vencimiento</th>
+                    <th>Monto</th>
+                    <th>Costo del Plan</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="payment : ${payments}">
+                    <td th:text="${payment.dueDatePretty()}"></td>
+                    <td th:text="${payment.amount}"></td>
+                    <td th:text="${payment.paymentPlanCost.amount}"></td>
+                    <td th:text="${payment.status}"></td>
+                    <td class="status-buttons">
+                        <form th:action="@{/update-payment-status}" method="post">
+                            <input type="hidden" name="paymentId" th:value="${payment.id}">
+                            <button type="submit" name="status" value="PENDING" class="btn btn-warning btn-sm">P</button>
+                            <button type="submit" name="status" value="COMPLETED" class="btn btn-success btn-sm">C</button>
+                            <button type="submit" name="status" value="CANCELLED" class="btn btn-danger btn-sm">X</button>
+                        </form>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <nav>
+            <ul class="pagination justify-content-center">
+                <li class="page-item" th:classappend="${page.number == 0} ? 'disabled'">
+                    <a class="page-link" th:href="@{|/user-info/${user.id}?page=0|}" aria-label="First">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                </li>
+                <li class="page-item" th:classappend="${page.hasPrevious()} ? '' : 'disabled'">
+                    <a class="page-link" th:href="@{|/user-info/${user.id}?page=${page.number-1}|}" aria-label="Previous">
+                        <span aria-hidden="true">&lt;</span>
+                    </a>
+                </li>
+                <li class="page-item" th:each="i : ${#numbers.sequence(1, page.totalPages)}" th:classappend="${i-1} == ${page.number} ? 'active'">
+                    <a class="page-link" th:href="@{|/user-info/${user.id}?page=${i-1}|}" th:text="${i}"></a>
+                </li>
+                <li class="page-item" th:classappend="${page.hasNext()} ? '' : 'disabled'">
+                    <a class="page-link" th:href="@{|/user-info/${user.id}?page=${page.number+1}|}" aria-label="Next">
+                        <span aria-hidden="true">&gt;</span>
+                    </a>
+                </li>
+                <li class="page-item" th:classappend="${page.number == page.totalPages-1} ? 'disabled'">
+                    <a class="page-link" th:href="@{|/user-info/${user.id}?page=${page.totalPages-1}|}" aria-label="Last">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/all.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

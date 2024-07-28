@@ -11,6 +11,7 @@ import lombok.EqualsAndHashCode;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.UUID;
 
 @Entity
@@ -26,8 +27,8 @@ public class Payment extends BaseEntity {
     private User user;
 
     @ManyToOne
-    @JoinColumn(name = "payment_plan_id")
-    private PaymentPlan paymentPlan;
+    @JoinColumn(name = "payment_plan_cost_id")
+    private PaymentPlanCost paymentPlanCost;
 
     @Column(name = "amount")
     private Double amount;
@@ -40,4 +41,8 @@ public class Payment extends BaseEntity {
     private LocalDateTime dueDate;
 
     public Payment() {}
+
+    public String dueDatePretty() {
+        return dueDate.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+    }
 }

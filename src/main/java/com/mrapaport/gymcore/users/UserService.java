@@ -2,6 +2,7 @@ package com.mrapaport.gymcore.users;
 
 import com.mrapaport.gymcore.payments.PaymentPlanService;
 import com.mrapaport.gymcore.users.model.User;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -48,5 +49,9 @@ public class UserService {
 
     public Page<User> getAllClients(Pageable pageable) {
         return repository.findAll(pageable);
+    }
+
+    public User findById(UUID id) {
+        return repository.findById(id).orElseThrow(() -> new EntityNotFoundException("User with id " + id + " not found"));
     }
 }
