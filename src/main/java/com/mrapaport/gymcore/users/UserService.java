@@ -1,6 +1,7 @@
 package com.mrapaport.gymcore.users;
 
 import com.mrapaport.gymcore.payments.PaymentPlanService;
+import com.mrapaport.gymcore.payments.model.PaymentPlan;
 import com.mrapaport.gymcore.users.model.User;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.data.domain.Page;
@@ -52,6 +53,13 @@ public class UserService {
     }
 
     public User findById(UUID id) {
-        return repository.findById(id).orElseThrow(() -> new EntityNotFoundException("User with id " + id + " not found"));
+        return enrichedWithPaymentPlan(repository.findById(id).orElseThrow(() -> new EntityNotFoundException("User with id " + id + " not found")));
+    }
+
+    private User enrichedWithPaymentPlan(User user) {
+        var currentPlan = user.getPaymentPlan();
+        var currentCost = paymentPlanService.getCurrentPlanCost(currentPlan);
+        currentPlan.setCurrentCost(currentCost.getAmount());
+        return user;
     }
 }

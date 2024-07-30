@@ -1,6 +1,8 @@
 package com.mrapaport.gymcore.payments;
 
 import com.mrapaport.gymcore.payments.model.PaymentPlan;
+import com.mrapaport.gymcore.payments.model.PaymentPlanCost;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -12,9 +14,11 @@ import java.util.UUID;
 public class PaymentPlanService {
 
     private final PaymentPlanRepository paymentPlanRepository;
+    private final PaymentPlanCostRepository paymentPlanCostRepository;
 
-    public PaymentPlanService(PaymentPlanRepository repository) {
-        this.paymentPlanRepository = repository;
+    public PaymentPlanService(PaymentPlanRepository paymentPlanRepository, PaymentPlanCostRepository paymentPlanCostRepository) {
+        this.paymentPlanRepository = paymentPlanRepository;
+        this.paymentPlanCostRepository = paymentPlanCostRepository;
     }
 
     public List<PaymentPlan> getAllActivePaymentPlans() {
@@ -23,5 +27,9 @@ public class PaymentPlanService {
 
     public Optional<PaymentPlan> findById(UUID paymentPlanId) {
         return paymentPlanRepository.findById(paymentPlanId);
+    }
+
+    public PaymentPlanCost getCurrentPlanCost(PaymentPlan currentPlan) {
+       return paymentPlanCostRepository.findByPaymentPlanActiveAt(currentPlan, LocalDateTime.now()).orElseThrow(EntityNotFoundException::new);
     }
 }

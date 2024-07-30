@@ -53,6 +53,7 @@ public class UserController {
         Pageable pageable = PageRequest.of(page, size);
         Page<User> clientPage = userService.getAllClients(pageable);
         model.addAttribute("users", clientPage.getContent());
+        model.addAttribute("page", clientPage);
         return "list_clients";
     }
 

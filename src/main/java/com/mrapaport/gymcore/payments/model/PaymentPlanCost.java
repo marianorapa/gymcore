@@ -5,7 +5,9 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import java.text.NumberFormat;
 import java.time.LocalDateTime;
+import java.util.Locale;
 
 @Entity
 @Table(name = "payment_plan_cost")
@@ -25,4 +27,12 @@ public class PaymentPlanCost extends BaseEntity {
 
     @Column(name = "valid_until")
     private LocalDateTime validUntil;
+
+    public String amountPretty() {
+        return NumberFormat.getCurrencyInstance(Locale.US).format(amount);
+    }
+
+    public boolean isCurrentlyActive() {
+        return LocalDateTime.now().isAfter(validFrom) && (validUntil == null || LocalDateTime.now().isBefore(validUntil));
+    }
 }
