@@ -1,15 +1,20 @@
 package com.mrapaport.gymcore.payments;
 
+import com.mrapaport.gymcore.payments.model.Payment;
 import com.mrapaport.gymcore.payments.model.enums.PaymentStatus;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
+import java.util.List;
 import java.util.UUID;
 
 @Controller
@@ -27,18 +32,32 @@ public class PaymentController {
     }
 
     @PostMapping("/register-payment")
-    public String registerPayment(@RequestParam String userDni, @RequestParam double amount, @RequestParam String expiryDate, RedirectAttributes redirectAttributes) {
+    public String registerPayment(@RequestParam String userDni, @RequestParam double amount,
+            @RequestParam String expiryDate, RedirectAttributes redirectAttributes) {
 
-        paymentService.registerPayment(userDni, amount, LocalDate.parse(expiryDate, DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+        paymentService.registerPayment(userDni, amount,
+                LocalDate.parse(expiryDate, DateTimeFormatter.ofPattern("yyyy-MM-dd")));
 
-        redirectAttributes.addFlashAttribute("message", "Pago registrado exitosamente para el usuario con DNI: " + userDni);
+        redirectAttributes.addFlashAttribute("message",
+                "Pago registrado exitosamente para el usuario con DNI: " + userDni);
         return "redirect:/register-payment";
     }
 
+    @GetMapping("/payment-info/{id}")
+    public String paymentInfo(@PathVariable UUID id, Model model) {
+        Payment payment = paymentService.findById(id);
+        List<PaymentStatus> paymentStatuses = Arrays.asList(PaymentStatus.values());
+        model.addAttribute("payment", payment);
+        model.addAttribute("paymentStatuses", paymentStatuses);
+        return "payment-info";
+    }
 
     @PostMapping("/update-payment-status")
-    public String updatePaymentStatus(@RequestParam UUID paymentId, @RequestParam PaymentStatus status) {
-        var payment = paymentService.updatePaymentStatus(paymentId, status);
-        return "redirect:/user-info/" + payment.getUser().getId();
+    public String updatePaymentStatus(@RequestParam UUID paymentId,
+            @RequestParam PaymentStatus status, HttpServletResponse response) {
+        paymentService.updatePaymentStatus(paymentId, status);
+        String userId = paymentService.findUserByPaymentId(paymentId).getId().toString();
+        response.setHeader("Refresh", "0; URL=/user-info/" + userId);
+        return "redirect:/user-info/" + userId;
     }
 }

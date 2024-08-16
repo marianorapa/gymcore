@@ -14,6 +14,6 @@ import java.util.UUID;
 public interface PaymentPlanCostRepository extends JpaRepository<PaymentPlanCost, UUID> {
 
 
-    @Query("SELECT p from PaymentPlanCost p where p.paymentPlan = :plan and p.validFrom <= :timestamp and p.validUntil >= :timestamp")
+    @Query("SELECT p from PaymentPlanCost p where p.paymentPlan = :plan and p.validFrom <= :timestamp and (p.validUntil IS NULL OR p.validUntil >= :timestamp)")
     Optional<PaymentPlanCost> findByPaymentPlanActiveAt(PaymentPlan plan, LocalDateTime timestamp);
 }

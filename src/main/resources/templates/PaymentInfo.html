@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title><!DOCTYPE html>
+        <html xmlns:th="http://www.thymeleaf.org">
+        <head>
+        <meta charset="UTF-8">
+        <title>Información del Pago</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+<div class="container">
+    <h1>Información del Pago</h1>
+    <form th:action="@{/update-payment-status}" method="post" class="needs-validation" novalidate>
+        <input type="hidden" name="paymentId" th:value="${payment.id}">
+        <div class="form-group">
+            <label for="dueDate">Fecha de Vencimiento</label>
+            <input type="text" class="form-control" id="dueDate" th:value="${payment.dueDatePretty()}" readonly>
+        </div>
+        <div class="form-group">
+            <label for="amount">Importe</label>
+            <input type="text" class="form-control" id="amount" th:value="${payment.paymentPlanCost.amountPretty()}" readonly>
+        </div>
+        <div class="form-group">
+            <label for="status">Estado</label>
+            <select id="status" name="status" class="form-control" required>
+                <option th:each="status : ${paymentStatuses}" th:value="${status}" th:text="${status}"></option>
+            </select>
+        </div>
+        <button type="submit" class="btn btn-primary">Actualizar Estado</button>
+    </form>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
+</title>
+</head>
+<body>
+
+</body>
+</html>

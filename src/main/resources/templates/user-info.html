@@ -73,19 +73,13 @@
                     <th>Fecha de Vencimiento</th>
                     <th>Importe</th>
                     <th>Estado</th>
-                    <th>Acciones</th>
                 </tr>
                 </thead>
                 <tbody>
-                <tr th:each="payment : ${payments}">
+                <tr th:each="payment : ${payments}" th:onclick="openPaymentInfo(${payment.id})" style="cursor: pointer;">
                     <td th:text="${payment.dueDatePretty()}"></td>
                     <td th:text="${payment.paymentPlanCost.amountPretty()}"></td>
                     <td th:text="${payment.status.pretty()}"></td>
-                    <td>
-                        <button th:attr="onclick='markPaymentStatus(' + ${payment.id} + ', \'PENDING\')'" class="btn btn-warning btn-sm">Pendiente</button>
-                        <button th:attr="onclick='markPaymentStatus(' + ${payment.id} + ', \'COMPLETED\')'" class="btn btn-success btn-sm">Completado</button>
-                        <button th:attr="onclick='markPaymentStatus(' + ${payment.id} + ', \'CANCELLED\')'" class="btn btn-danger btn-sm">Cancelado</button>
-                    </td>
                 </tr>
                 </tbody>
             </table>
@@ -97,18 +91,8 @@
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 <script>
-    function markPaymentStatus(paymentId, status) {
-        // Call the backend to update the payment status
-        fetch(`/update-payment-status/${paymentId}?status=${status}`, {
-            method: 'POST'
-        }).then(response => {
-            if (response.ok) {
-                // Reload the page or update the status in the table
-                window.location.reload();
-            } else {
-                alert('Error al actualizar el estado del pago.');
-            }
-        });
+    function openPaymentInfo(paymentId) {
+        window.open('/payment-info/' + paymentId, '_blank');
     }
 </script>
 </body>

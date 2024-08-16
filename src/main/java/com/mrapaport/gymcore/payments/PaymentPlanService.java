@@ -16,7 +16,8 @@ public class PaymentPlanService {
     private final PaymentPlanRepository paymentPlanRepository;
     private final PaymentPlanCostRepository paymentPlanCostRepository;
 
-    public PaymentPlanService(PaymentPlanRepository paymentPlanRepository, PaymentPlanCostRepository paymentPlanCostRepository) {
+    public PaymentPlanService(PaymentPlanRepository paymentPlanRepository,
+            PaymentPlanCostRepository paymentPlanCostRepository) {
         this.paymentPlanRepository = paymentPlanRepository;
         this.paymentPlanCostRepository = paymentPlanCostRepository;
     }
@@ -30,6 +31,8 @@ public class PaymentPlanService {
     }
 
     public PaymentPlanCost getCurrentPlanCost(PaymentPlan currentPlan) {
-       return paymentPlanCostRepository.findByPaymentPlanActiveAt(currentPlan, LocalDateTime.now()).orElseThrow(EntityNotFoundException::new);
+        return paymentPlanCostRepository.findByPaymentPlanActiveAt(currentPlan, LocalDateTime.now())
+                .orElseThrow(() -> new EntityNotFoundException(
+                        "Cost not found for payment plan " + currentPlan.getId()));
     }
 }
