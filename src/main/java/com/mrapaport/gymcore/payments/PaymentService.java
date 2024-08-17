@@ -1,6 +1,8 @@
 package com.mrapaport.gymcore.payments;
 
 import com.mrapaport.gymcore.payments.model.Payment;
+import com.mrapaport.gymcore.payments.model.PaymentBuilder;
+import com.mrapaport.gymcore.payments.model.PaymentPlanCost;
 import com.mrapaport.gymcore.payments.model.enums.PaymentStatus;
 import com.mrapaport.gymcore.usage.UsageService;
 import com.mrapaport.gymcore.users.UserService;
@@ -22,15 +24,17 @@ import java.util.UUID;
 @Service
 public class PaymentService {
 
-    private PaymentRepository repository;
-    private UsageService usageService;
-    private UserService userService;
+    private final PaymentRepository repository;
+    private final UsageService usageService;
+    private final UserService userService;
+    private final PaymentPlanService paymentPlanService;
 
     public PaymentService(PaymentRepository repository, UsageService usageService,
-            UserService userService) {
+            UserService userService, PaymentPlanService paymentPlanService) {
         this.repository = repository;
         this.usageService = usageService;
         this.userService = userService;
+        this.paymentPlanService = paymentPlanService;
     }
 
     @Transactional
@@ -62,6 +66,16 @@ public class PaymentService {
 
     public User findUserByPaymentId(UUID paymentId) {
         return this.findById(paymentId).getUser();
+    }
+
+    public void createPayment(UUID userId, double amount) {
+        var user = userService.findById(userId);
+        var lastPayment = repository.findLastUserPayment(user).orElse(null);
+        var currentPlanCost = paymentPlanService.getCurrentPlanCost(user.getPaymentPlan());
+        var newPayment = PaymentBuilder.builder().forUser(user).withAmount(amount)
+                .withCurrentPlanCost(currentPlanCost).withLastPayment(lastPayment).build();
+
+        repository.save(newPayment);
     }
 
 }

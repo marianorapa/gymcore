@@ -60,4 +60,14 @@ public class PaymentController {
         response.setHeader("Refresh", "0; URL=/user-info/" + userId);
         return "redirect:/user-info/" + userId;
     }
+
+    @PostMapping("/create-payment/{userId}")
+    public String createPayment(@PathVariable UUID userId, @RequestParam double amount, RedirectAttributes redirectAttributes) {
+        paymentService.createPayment(userId, amount);
+
+        redirectAttributes.addFlashAttribute("message",
+                "Pago registrado exitosamente para el usuario con ID: " + userId);
+
+        return "redirect:/user-info/" + userId;
+    }
 }

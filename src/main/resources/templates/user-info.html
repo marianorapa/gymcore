@@ -24,9 +24,24 @@
             justify-content: space-between;
             align-items: center;
         }
+        .pagos-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 20px;
+        }
+        .create-payment-form {
+            display: flex;
+            align-items: center;
+        }
+        .create-payment-input {
+            margin-right: 10px;
+            padding: 5px;
+        }
         .create-payment-btn {
             background-color: #28a745;
             color: #fff;
+            padding: 5px 10px;
         }
     </style>
 </head>
@@ -37,9 +52,6 @@
     <div class="container">
         <div class="user-info-header">
             <h1>Información del Socio</h1>
-            <a th:href="@{/create-payment/{id}(id=${user.id})}" class="btn create-payment-btn">
-                <i class="fas fa-plus-circle"></i> Crear Pago
-            </a>
         </div>
         <div class="table-container">
             <table class="table table-bordered">
@@ -65,21 +77,32 @@
                 </tr>
             </table>
         </div>
-        <h2>Pagos</h2>
+        <div class="pagos-header">
+            <h2>Pagos</h2>
+            <form th:action="@{/create-payment/{id}(id=${user.id})}" method="post" class="create-payment-form" onsubmit="return confirmPayment()">
+                <label for="amount">Monto: $</label>
+                <input type="number" step="0.01" min="0" name="amount" id="amount" class="create-payment-input" required>
+                <button type="submit" class="btn create-payment-btn">
+                    Crear Pago
+                </button>
+            </form>
+        </div>
         <div class="table-container">
             <table class="table table-striped">
                 <thead>
                 <tr>
-                    <th>Fecha de Vencimiento</th>
-                    <th>Importe</th>
-                    <th>Estado</th>
+                    <th>Fecha de pago</th>
+                    <th>Válido hasta</th>
+                    <th>Costo del plan</th>
+                    <th>Importe pago</th>
                 </tr>
                 </thead>
                 <tbody>
                 <tr th:each="payment : ${payments}" th:onclick="openPaymentInfo(${payment.id})" style="cursor: pointer;">
-                    <td th:text="${payment.dueDatePretty()}"></td>
+                    <td th:text="${payment.createdAtPretty()}"></td>
+                    <td th:text="${payment.accessUntilPretty()}"></td>
                     <td th:text="${payment.paymentPlanCost.amountPretty()}"></td>
-                    <td th:text="${payment.status.pretty()}"></td>
+                    <td th:text="${payment.amountPretty()}"></td>
                 </tr>
                 </tbody>
             </table>
@@ -93,6 +116,11 @@
 <script>
     function openPaymentInfo(paymentId) {
         window.open('/payment-info/' + paymentId, '_blank');
+    }
+
+    function confirmPayment() {
+        const amount = document.getElementById("amount").value;
+        return confirm("¿Está seguro de que desea registrar un pago por $" + amount + "?");
     }
 </script>
 </body>

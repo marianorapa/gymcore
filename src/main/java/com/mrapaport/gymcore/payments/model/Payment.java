@@ -9,9 +9,10 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import jakarta.persistence.*;
-
+import java.text.NumberFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Locale;
 import java.util.UUID;
 
 @Entity
@@ -37,12 +38,16 @@ public class Payment extends BaseEntity {
     @Column(name = "status")
     private PaymentStatus status;
 
-    @Column(name = "due_date")
-    private LocalDateTime dueDate;
+    @Column(name = "access_until")
+    private LocalDateTime accessUntil;
 
     public Payment() {}
 
-    public String dueDatePretty() {
-        return dueDate.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+    public String accessUntilPretty() {
+        return accessUntil.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+    }
+
+    public String amountPretty() {
+        return NumberFormat.getCurrencyInstance(Locale.US).format(amount);
     }
 }

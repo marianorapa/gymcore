@@ -1,0 +1,1 @@
+ALTER TABLE payments RENAME COLUMN due_date TO access_until;

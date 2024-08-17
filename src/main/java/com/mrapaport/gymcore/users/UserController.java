@@ -60,7 +60,7 @@ public class UserController {
     @GetMapping("/user-info/{id}")
     public String userInfo(@PathVariable UUID id, @RequestParam(defaultValue = "0") int page, Model model) {
         User user = userService.findById(id);
-        Pageable pageable = PageRequest.of(page, 10, Sort.by("dueDate").ascending());
+        Pageable pageable = PageRequest.of(page, 10, Sort.by("accessUntil").ascending());
         Page<Payment> payments = paymentService.findByUserId(user.getId(), pageable);
 
         model.addAttribute("user", user);
