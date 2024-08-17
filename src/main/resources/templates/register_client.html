@@ -60,6 +60,15 @@
                 <div class="form-group">
                     <div class="input-group">
                         <div class="input-group-prepend">
+                            <span class="input-group-text"><i class="fas fa-phone"></i></span>
+                        </div>
+                        <input type="text" name="phoneNumber" id="phoneNumber" class="form-control" placeholder="Número de Teléfono" required>
+                        <div class="invalid-feedback">Por favor, ingrese un número de teléfono.</div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="input-group">
+                        <div class="input-group-prepend">
                             <span class="input-group-text"><i class="fas fa-list-alt"></i></span>
                         </div>
                         <select name="paymentPlanId" id="paymentPlanId" class="form-control" required>
@@ -73,6 +82,7 @@
                 </div>
                 <button type="button" class="btn btn-primary btn-block" id="previewButton">Previsualizar</button>
             </form>
+            
             <div id="confirmationSection" style="display: none;">
                 <h2>Confirmar Datos</h2>
                 <p>Nombre de Usuario: <span id="confirmUsername"></span></p>

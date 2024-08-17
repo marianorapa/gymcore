@@ -39,13 +39,13 @@ public class UserService {
         return user;
     }
 
-    public User registerClient(String username, String dni, UUID paymentPlanId) {
+    public User registerClient(String username, String dni, UUID paymentPlanId, String phoneNumber) {
         if (!User.isValid(repository, dni)) {
             throw new IllegalArgumentException("Invalid user info");
         }
 
         var optPlan = paymentPlanService.findById(paymentPlanId);
-        return optPlan.map(plan -> User.saveNew(repository, username, dni, plan)).orElseThrow();
+        return optPlan.map(plan -> User.saveNew(repository, username, dni, plan, phoneNumber)).orElseThrow();
     }
 
     public Page<User> getAllClients(Pageable pageable) {

@@ -36,12 +36,16 @@ public class User extends BaseEntity {
     @JoinColumn(columnDefinition = "payment_plan_id")
     private PaymentPlan paymentPlan;
 
-    public static User saveNew(UserRepository repository, String username, String dni, PaymentPlan paymentPlan) {
+    @Column(name = "phone_number")
+    private String phoneNumber;
+
+    public static User saveNew(UserRepository repository, String username, String dni, PaymentPlan paymentPlan, String phoneNumber) {
         var user = new User();
         user.dni = dni;
         user.username = username;
         user.paymentPlan = paymentPlan;
         user.pin = generatePin();
+        user.phoneNumber = phoneNumber;
         while (repository.findByPin(user.pin).isPresent()) {
             user.pin = generatePin();
         }

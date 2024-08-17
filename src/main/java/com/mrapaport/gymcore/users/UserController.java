@@ -38,8 +38,8 @@ public class UserController {
     }
 
     @PostMapping("/register-client")
-    public String registerClient(@RequestParam String username, @RequestParam String dni, @RequestParam UUID paymentPlanId, Model model) {
-        var user = userService.registerClient(username, dni, paymentPlanId);
+    public String registerClient(@RequestParam String username, @RequestParam String dni, @RequestParam UUID paymentPlanId,  @RequestParam String phoneNumber, Model model) {
+        var user = userService.registerClient(username, dni, paymentPlanId, phoneNumber);
         model.addAttribute("message", "Cliente registrado. Pin de acceso: " + user.getPin());
         var paymentPlans = paymentPlanService.getAllActivePaymentPlans();
         model.addAttribute("paymentPlans", paymentPlans);
