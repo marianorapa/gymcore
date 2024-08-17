@@ -1,5 +1,6 @@
 package com.mrapaport.gymcore.usage;
 
+import com.mrapaport.gymcore.payments.PaymentService;
 import com.mrapaport.gymcore.usage.model.UsageLog;
 import com.mrapaport.gymcore.usage.model.UsageQuota;
 import com.mrapaport.gymcore.users.UserService;
@@ -15,17 +16,19 @@ public class UsageService {
     UsageQuotaRepository repository;
     UsageLogRepository usageLogRepository;
     UserService userService;
+    PaymentService paymentService;
 
-    public UsageService(UsageQuotaRepository repository, UsageLogRepository usageLogRepository, UserService userService) {
+    public UsageService(UsageQuotaRepository repository, UsageLogRepository usageLogRepository, UserService userService, PaymentService paymentService) {
         this.repository = repository;
         this.usageLogRepository = usageLogRepository;
         this.userService = userService;
+        this.paymentService = paymentService;
     }
 
     public boolean determineAccess(String userId) {
         var optUser = userService.findByUserId(userId);
         return optUser.map(user -> {
-            var valid = user.hasValidAccess(this);
+            var valid = user.hasValidAccess(paymentService);
             usageLogRepository.save(UsageLog.forUser(optUser.get(), valid));
             return valid;
         }).orElse(false);

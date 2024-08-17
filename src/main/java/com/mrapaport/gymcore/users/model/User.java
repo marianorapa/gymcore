@@ -1,6 +1,8 @@
 package com.mrapaport.gymcore.users.model;
 
 import com.mrapaport.gymcore.common.BaseEntity;
+import com.mrapaport.gymcore.payments.PaymentService;
+import com.mrapaport.gymcore.payments.model.Payment;
 import com.mrapaport.gymcore.payments.model.PaymentPlan;
 import com.mrapaport.gymcore.usage.UsageService;
 import com.mrapaport.gymcore.usage.model.UsageQuota;
@@ -39,7 +41,8 @@ public class User extends BaseEntity {
     @Column(name = "phone_number")
     private String phoneNumber;
 
-    public static User saveNew(UserRepository repository, String username, String dni, PaymentPlan paymentPlan, String phoneNumber) {
+    public static User saveNew(UserRepository repository, String username, String dni,
+            PaymentPlan paymentPlan, String phoneNumber) {
         var user = new User();
         user.dni = dni;
         user.username = username;
@@ -60,13 +63,14 @@ public class User extends BaseEntity {
         return repository.findByDni(dni).isEmpty();
     }
 
-    public boolean hasValidAccess(UsageService usageService) {
-        var currentQuota = usageService.getCurrentUsageQuota(this);
-        return currentQuota.isPresent();
+    public boolean hasValidAccess(PaymentService paymentService) {
+        return paymentService.findLastUserPayment(this).map(Payment::isCurrentlyValid)
+                .orElse(false);
     }
 
     public UsageQuota lastAccessQuota() {
-        return usageQuotas.stream().max(Comparator.comparing(UsageQuota::getValidUntil)).orElse(null);
+        return usageQuotas.stream().max(Comparator.comparing(UsageQuota::getValidUntil))
+                .orElse(null);
     }
 
 

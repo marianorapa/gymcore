@@ -50,4 +50,8 @@ public class Payment extends BaseEntity {
     public String amountPretty() {
         return NumberFormat.getCurrencyInstance(Locale.US).format(amount);
     }
+
+    public boolean isCurrentlyValid() {
+        return LocalDateTime.now().isBefore(accessUntil);
+    }
 }

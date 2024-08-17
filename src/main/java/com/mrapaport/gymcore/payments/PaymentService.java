@@ -19,34 +19,21 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
 public class PaymentService {
 
     private final PaymentRepository repository;
-    private final UsageService usageService;
     private final UserService userService;
     private final PaymentPlanService paymentPlanService;
 
-    public PaymentService(PaymentRepository repository, UsageService usageService,
+    public PaymentService(PaymentRepository repository,
             UserService userService, PaymentPlanService paymentPlanService) {
         this.repository = repository;
-        this.usageService = usageService;
         this.userService = userService;
         this.paymentPlanService = paymentPlanService;
-    }
-
-    @Transactional
-    public void registerPayment(String userDni, double amount, LocalDate expiryDate) {
-        var userOpt = userService.findByDni(userDni);
-        userOpt.ifPresentOrElse(user -> {
-            var payment = Payment.builder().user(user).amount(amount).build();
-            repository.save(payment);
-            usageService.newQuotaForUser(user, LocalDateTime.of(expiryDate, LocalTime.now()));
-        }, () -> {
-            throw new UserNotFoundException();
-        });
     }
 
     public Page<Payment> findByUserId(UUID userId, Pageable pageable) {
@@ -76,6 +63,10 @@ public class PaymentService {
                 .withCurrentPlanCost(currentPlanCost).withLastPayment(lastPayment).build();
 
         repository.save(newPayment);
+    }
+
+    public Optional<Payment> findLastUserPayment(User user) {
+        return repository.findLastUserPayment(user);
     }
 
 }

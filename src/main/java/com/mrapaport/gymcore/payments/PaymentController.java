@@ -31,17 +31,6 @@ public class PaymentController {
         return "register_payment";
     }
 
-    @PostMapping("/register-payment")
-    public String registerPayment(@RequestParam String userDni, @RequestParam double amount,
-            @RequestParam String expiryDate, RedirectAttributes redirectAttributes) {
-
-        paymentService.registerPayment(userDni, amount,
-                LocalDate.parse(expiryDate, DateTimeFormatter.ofPattern("yyyy-MM-dd")));
-
-        redirectAttributes.addFlashAttribute("message",
-                "Pago registrado exitosamente para el usuario con DNI: " + userDni);
-        return "redirect:/register-payment";
-    }
 
     @GetMapping("/payment-info/{id}")
     public String paymentInfo(@PathVariable UUID id, Model model) {
