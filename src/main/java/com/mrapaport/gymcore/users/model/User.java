@@ -13,9 +13,11 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import jakarta.persistence.*;
-
+import java.math.BigDecimal;
+import java.text.NumberFormat;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -71,5 +73,22 @@ public class User extends BaseEntity {
                 .orElse(false);
     }
 
+    public Optional<PromotionAssignment> getActivePromotion() {
+        if (this.promotionAssignments.size() > 0) {
+            return this.promotionAssignments.stream().filter(promoAssignment -> promoAssignment.isActive()).findFirst();
+        }
+        return Optional.empty();
+    }
+
+    public String currentCostWithPromoPretty() {
+        var activePromo = getActivePromotion();
+        if (activePromo.isPresent()) {
+            var promoDiscount = activePromo.get().getPromotion().getDiscountPercentage();
+            var currentPlanCost = paymentPlan.getCurrentCost();
+            var discountedPrice = BigDecimal.valueOf(currentPlanCost).multiply(BigDecimal.ONE.subtract(promoDiscount.divide(BigDecimal.valueOf(100L))));
+            return NumberFormat.getCurrencyInstance(Locale.US).format(discountedPrice);
+        }
+        return paymentPlan.currentCostPretty();
+    }
 
 }

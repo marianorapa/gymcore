@@ -3,6 +3,8 @@ package com.mrapaport.gymcore.users;
 import com.mrapaport.gymcore.payments.PaymentPlanService;
 import com.mrapaport.gymcore.payments.PaymentService;
 import com.mrapaport.gymcore.payments.model.Payment;
+import com.mrapaport.gymcore.payments.model.Promotion;
+import com.mrapaport.gymcore.payments.model.PromotionAssignment;
 import com.mrapaport.gymcore.users.model.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -14,7 +16,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-
+import java.util.Optional;
 import java.util.UUID;
 
 @Controller
@@ -61,11 +63,14 @@ public class UserController {
 
     @GetMapping("/user-info/{id}")
     public String userInfo(@PathVariable UUID id, @RequestParam(defaultValue = "0") int page, Model model) {
-        User user = userService.findById(id);
+        var user = userService.findById(id);
+        Optional<Promotion> promo = user.getActivePromotion().map(PromotionAssignment::getPromotion);
+        var promoDescription = promo.map(Promotion::getDescription).orElse("-");
         Pageable pageable = PageRequest.of(page, 10, Sort.by("accessUntil").ascending());
         Page<Payment> payments = paymentService.findByUserId(user.getId(), pageable);
 
         model.addAttribute("user", user);
+        model.addAttribute("promo", promoDescription);
         model.addAttribute("payments", payments.getContent());
         model.addAttribute("page", payments);
 

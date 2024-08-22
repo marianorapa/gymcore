@@ -41,4 +41,9 @@ public class PromotionAssignment extends BaseEntity{
     public static PromotionAssignment forUserWithPromo(User user, Promotion promo) {
        return new PromotionAssignment(user, promo, LocalDate.now(), LocalDate.now().plusMonths(1));
     }
+
+    public boolean isActive() {
+        var now = LocalDate.now();
+        return (startDate.isEqual(now) || startDate.isBefore(now)) && (endDate.isEqual(now) || endDate.isAfter(now));
+    }
 }

@@ -75,6 +75,14 @@
                     <th>Costo del Plan Actual</th>
                     <td th:text="${user.paymentPlan.currentCostPretty()}"></td>
                 </tr>
+                <tr>
+                    <th>Promoción activa</th>
+                    <td th:text="${promo}"></td>
+                </tr>
+                <tr>
+                    <th>Costo con descuento</th>
+                    <td th:text="${user.currentCostWithPromoPretty()}"></td>
+                </tr>
             </table>
         </div>
         <div class="pagos-header">
