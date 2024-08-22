@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="UTF-8">
     <title>Registrar Cliente</title>
@@ -11,11 +12,14 @@
             display: flex;
             background-color: #f8f9fa;
         }
+
         .main-content {
-            margin-left: 250px; /* Adjusted for the sidebar width */
+            margin-left: 250px;
+            /* Adjusted for the sidebar width */
             width: calc(100% - 250px);
             padding: 20px;
         }
+
         .alert-container {
             position: absolute;
             top: 20px;
@@ -24,142 +28,188 @@
         }
     </style>
 </head>
+
 <body>
-<div th:replace="sidebar :: sidebar"></div>
-<div class="main-content">
-    <div class="alert-container" th:if="${message}">
-        <div class="alert alert-info alert-dismissible fade show" role="alert">
-            <span th:text="${message}"></span>
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
+    <div th:replace="sidebar :: sidebar"></div>
+    <div class="main-content">
+        <div class="alert-container" th:if="${message}">
+            <div class="alert alert-info alert-dismissible fade show" role="alert">
+                <span th:text="${message}"></span>
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
         </div>
-    </div>
-    <div class="container">
-        <h1 class="text-center">Registrar Cliente</h1>
-        <div class="form-container">
-            <form id="registrationForm" th:action="@{/register-client}" method="post" class="needs-validation" novalidate>
-                <div class="form-group">
-                    <div class="input-group">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text"><i class="fas fa-user"></i></span>
+        <div class="container">
+            <h1 class="text-center">Registrar Cliente</h1>
+            <div class="form-container">
+                <form id="registrationForm" th:action="@{/register-client}" method="post" class="needs-validation"
+                    novalidate>
+                    <div class="form-group">
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="fas fa-user"></i></span>
+                            </div>
+                            <input type="text" name="username" id="username" class="form-control"
+                                placeholder="Nombre de Usuario" required>
+                            <div class="invalid-feedback">Por favor, ingrese un nombre de usuario.</div>
                         </div>
-                        <input type="text" name="username" id="username" class="form-control" placeholder="Nombre de Usuario" required>
-                        <div class="invalid-feedback">Por favor, ingrese un nombre de usuario.</div>
                     </div>
-                </div>
-                <div class="form-group">
-                    <div class="input-group">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text"><i class="fas fa-id-card"></i></span>
+                    <div class="form-group">
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="fas fa-id-card"></i></span>
+                            </div>
+                            <input type="text" name="dni" id="dni" class="form-control" placeholder="DNI" required>
+                            <div class="invalid-feedback">Por favor, ingrese un DNI.</div>
                         </div>
-                        <input type="text" name="dni" id="dni" class="form-control" placeholder="DNI" required>
-                        <div class="invalid-feedback">Por favor, ingrese un DNI.</div>
                     </div>
-                </div>
-                <div class="form-group">
-                    <div class="input-group">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text"><i class="fas fa-phone"></i></span>
+                    <div class="form-group">
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="fas fa-phone"></i></span>
+                            </div>
+                            <input type="text" name="phoneNumber" id="phoneNumber" class="form-control"
+                                placeholder="Número de Teléfono" required>
+                            <div class="invalid-feedback">Por favor, ingrese un número de teléfono.</div>
                         </div>
-                        <input type="text" name="phoneNumber" id="phoneNumber" class="form-control" placeholder="Número de Teléfono" required>
-                        <div class="invalid-feedback">Por favor, ingrese un número de teléfono.</div>
                     </div>
-                </div>
+                    <div class="form-group">
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="fas fa-list-alt"></i></span>
+                            </div>
+                            <select name="paymentPlanId" id="paymentPlanId" class="form-control" required>
+                                <option th:each="plan : ${paymentPlans}" th:value="${plan.id}"
+                                    th:data-description="${plan.planDescription}" th:text="${plan.planName}">Seleccionar
+                                    Plan</option>
+                            </select>
+                            <div class="invalid-feedback">Por favor, seleccione un plan.</div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <textarea id="planDescription" class="form-control" readonly
+                            placeholder="Descripción del Plan"></textarea>
+                    </div>
+                
                 <div class="form-group">
                     <div class="input-group">
                         <div class="input-group-prepend">
-                            <span class="input-group-text"><i class="fas fa-list-alt"></i></span>
+                            <span class="input-group-text"><i class="fas fa-tags"></i></span>
                         </div>
-                        <select name="paymentPlanId" id="paymentPlanId" class="form-control" required>
-                            <option th:each="plan : ${paymentPlans}" th:value="${plan.id}" th:data-description="${plan.planDescription}" th:text="${plan.planName}">Seleccionar Plan</option>
+                        <select name="promotionId" id="promotionId" class="form-control">
+                            <option value="">Sin promoción</option>
+                            <option th:each="promo : ${promotions}" th:value="${promo.id}"
+                                th:data-description="${promo.description}" th:text="${promo.name}">Seleccionar Promoción
+                            </option>
                         </select>
-                        <div class="invalid-feedback">Por favor, seleccione un plan.</div>
+                        <div class="invalid-feedback">Por favor, seleccione una promoción.</div>
                     </div>
                 </div>
                 <div class="form-group">
-                    <textarea id="planDescription" class="form-control" readonly placeholder="Descripción del Plan"></textarea>
+                    <textarea id="promoDescription" class="form-control" readonly
+                        placeholder="Descripción de la Promoción"></textarea>
                 </div>
                 <button type="button" class="btn btn-primary btn-block" id="previewButton">Previsualizar</button>
+
             </form>
-            
-            <div id="confirmationSection" style="display: none;">
-                <h2>Confirmar Datos</h2>
-                <p>Nombre de Usuario: <span id="confirmUsername"></span></p>
-                <p>DNI: <span id="confirmDni"></span></p>
-                <p>Plan: <span id="confirmPlan"></span></p>
-                <p>Descripción del Plan: <span id="confirmPlanDescription"></span></p>
-                <button type="button" class="btn btn-secondary" id="editButton">Editar</button>
-                <button type="button" class="btn btn-success" id="submitButton">Confirmar</button>
+
+                <div id="confirmationSection" style="display: none;">
+                    <h2>Confirmar Datos</h2>
+                    <p>Nombre de Usuario: <span id="confirmUsername"></span></p>
+                    <p>DNI: <span id="confirmDni"></span></p>
+                    <p>Plan: <span id="confirmPlan"></span></p>
+                    <p>Descripción del Plan: <span id="confirmPlanDescription"></span></p>
+                    <button type="button" class="btn btn-secondary" id="editButton">Editar</button>
+                    <button type="button" class="btn btn-success" id="submitButton">Confirmar</button>
+                </div>
             </div>
         </div>
     </div>
-</div>
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-<script>
-    (function() {
-        'use strict';
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        (function () {
+            'use strict';
 
-        window.addEventListener('load', function() {
-            var forms = document.getElementsByClassName('needs-validation');
-            Array.prototype.filter.call(forms, function(form) {
-                form.addEventListener('submit', function(event) {
-                    if (form.checkValidity() === false) {
-                        event.preventDefault();
-                        event.stopPropagation();
-                    }
-                    form.classList.add('was-validated');
-                }, false);
-            });
-        }, false);
+            window.addEventListener('load', function () {
+                var forms = document.getElementsByClassName('needs-validation');
+                Array.prototype.filter.call(forms, function (form) {
+                    form.addEventListener('submit', function (event) {
+                        if (form.checkValidity() === false) {
+                            event.preventDefault();
+                            event.stopPropagation();
+                        }
+                        form.classList.add('was-validated');
+                    }, false);
+                });
+            }, false);
 
-        // Update plan description based on selected payment plan
-        document.getElementById('paymentPlanId').addEventListener('change', function() {
-            var selectedOption = this.options[this.selectedIndex];
-            var planDescription = selectedOption.getAttribute('data-description');
-            document.getElementById('planDescription').value = planDescription;
-        });
-
-        // Set initial description on page load
-        document.addEventListener('DOMContentLoaded', function() {
-            var paymentPlanId = document.getElementById('paymentPlanId');
-            if (paymentPlanId.selectedIndex >= 0) {
-                var selectedOption = paymentPlanId.options[paymentPlanId.selectedIndex];
+            // Update plan description based on selected payment plan
+            document.getElementById('paymentPlanId').addEventListener('change', function () {
+                var selectedOption = this.options[this.selectedIndex];
                 var planDescription = selectedOption.getAttribute('data-description');
                 document.getElementById('planDescription').value = planDescription;
-            }
-        });
+            });
 
-        // Preview button logic
-        document.getElementById('previewButton').addEventListener('click', function() {
-            var username = document.getElementById('username').value;
-            var dni = document.getElementById('dni').value;
-            var paymentPlanId = document.getElementById('paymentPlanId');
-            var selectedPlanName = paymentPlanId.options[paymentPlanId.selectedIndex].text;
-            var planDescription = document.getElementById('planDescription').value;
+            // Set initial description on page load
+            document.addEventListener('DOMContentLoaded', function () {
+                var paymentPlanId = document.getElementById('paymentPlanId');
+                if (paymentPlanId.selectedIndex >= 0) {
+                    var selectedOption = paymentPlanId.options[paymentPlanId.selectedIndex];
+                    var planDescription = selectedOption.getAttribute('data-description');
+                    document.getElementById('planDescription').value = planDescription;
+                }
+            });
 
-            document.getElementById('confirmUsername').textContent = username;
-            document.getElementById('confirmDni').textContent = dni;
-            document.getElementById('confirmPlan').textContent = selectedPlanName;
-            document.getElementById('confirmPlanDescription').textContent = planDescription;
+            // Update promo description based on selected promotion
+            document.getElementById('promotionId').addEventListener('change', function () {
+                var selectedOption = this.options[this.selectedIndex];
+                var promoDescription = selectedOption.getAttribute('data-description');
+                document.getElementById('promoDescription').value = promoDescription;
+            });
 
-            document.getElementById('registrationForm').style.display = 'none';
-            document.getElementById('confirmationSection').style.display = 'block';
-        });
+            // Set initial promo description on page load
+            document.addEventListener('DOMContentLoaded', function () {
+                var promotionId = document.getElementById('promotionId');
+                if (promotionId.selectedIndex >= 0) {
+                    var selectedOption = promotionId.options[promotionId.selectedIndex];
+                    var promoDescription = selectedOption.getAttribute('data-description');
+                    document.getElementById('promoDescription').value = promoDescription;
+                }
+            });
 
-        // Edit button logic
-        document.getElementById('editButton').addEventListener('click', function() {
-            document.getElementById('registrationForm').style.display = 'block';
-            document.getElementById('confirmationSection').style.display = 'none';
-        });
+            // Preview button logic
+            document.getElementById('previewButton').addEventListener('click', function () {
+                var username = document.getElementById('username').value;
+                var dni = document.getElementById('dni').value;
+                var paymentPlanId = document.getElementById('paymentPlanId');
+                var selectedPlanName = paymentPlanId.options[paymentPlanId.selectedIndex].text;
+                var planDescription = document.getElementById('planDescription').value;
 
-        // Submit button logic
-        document.getElementById('submitButton').addEventListener('click', function() {
-            document.getElementById('registrationForm').submit();
-        });
-    })();
-</script>
+                document.getElementById('confirmUsername').textContent = username;
+                document.getElementById('confirmDni').textContent = dni;
+                document.getElementById('confirmPlan').textContent = selectedPlanName;
+                document.getElementById('confirmPlanDescription').textContent = planDescription;
+
+                document.getElementById('registrationForm').style.display = 'none';
+                document.getElementById('confirmationSection').style.display = 'block';
+            });
+
+            // Edit button logic
+            document.getElementById('editButton').addEventListener('click', function () {
+                document.getElementById('registrationForm').style.display = 'block';
+                document.getElementById('confirmationSection').style.display = 'none';
+            });
+
+            // Submit button logic
+            document.getElementById('submitButton').addEventListener('click', function () {
+                document.getElementById('registrationForm').submit();
+            });
+
+        })();
+    </script>
 </body>
+
 </html>

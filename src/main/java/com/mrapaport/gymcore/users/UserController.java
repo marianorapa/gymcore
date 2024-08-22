@@ -33,13 +33,15 @@ public class UserController {
     @GetMapping("/register-client")
     public String showRegisterClientForm(Model model) {
         var paymentPlans = paymentPlanService.getAllActivePaymentPlans();
+        var promos = paymentPlanService.getAllActivePromos();
         model.addAttribute("paymentPlans", paymentPlans);
+        model.addAttribute("promotions", promos);
         return "register_client";
     }
 
     @PostMapping("/register-client")
-    public String registerClient(@RequestParam String username, @RequestParam String dni, @RequestParam UUID paymentPlanId,  @RequestParam String phoneNumber, Model model) {
-        var user = userService.registerClient(username, dni, paymentPlanId, phoneNumber);
+    public String registerClient(@RequestParam String username, @RequestParam String dni, @RequestParam UUID paymentPlanId,  @RequestParam String phoneNumber, @RequestParam(required =  false) UUID promotionId, Model model) {
+        var user = userService.registerClient(username, dni, paymentPlanId, phoneNumber, promotionId);
         model.addAttribute("message", "Cliente registrado. Pin de acceso: " + user.getPin());
         var paymentPlans = paymentPlanService.getAllActivePaymentPlans();
         model.addAttribute("paymentPlans", paymentPlans);

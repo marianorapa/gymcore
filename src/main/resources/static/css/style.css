@@ -73,3 +73,7 @@ h1 {
 .form-container .input-group {
     margin: 10px 0;
 }
+
+.btn-primary, .btn-primary:hover, .btn-primary:active, .btn-primary:visited {
+    background-color: #d58e08;
+}

@@ -39,13 +39,20 @@ public class UserService {
         return user;
     }
 
-    public User registerClient(String username, String dni, UUID paymentPlanId, String phoneNumber) {
+    public User registerClient(String username, String dni, UUID paymentPlanId, String phoneNumber, UUID promotionId) {
         if (!User.isValid(repository, dni)) {
             throw new IllegalArgumentException("Invalid user info");
         }
 
         var optPlan = paymentPlanService.findById(paymentPlanId);
-        return optPlan.map(plan -> User.saveNew(repository, username, dni, plan, phoneNumber)).orElseThrow();
+        return optPlan.map(plan -> {
+            var newUser = User.saveNew(repository, username, dni, plan, phoneNumber);    
+            if (promotionId != null) {
+                paymentPlanService.addUserPromotion(newUser, promotionId);
+            }
+
+            return newUser;
+        }).orElseThrow();
     }
 
     public Page<User> getAllClients(Pageable pageable) {

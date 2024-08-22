@@ -1,4 +1,4 @@
-package com.mrapaport.gymcore.payments;
+package com.mrapaport.gymcore.payments.repository;
 
 import com.mrapaport.gymcore.payments.model.PaymentPlan;
 import org.springframework.data.jpa.repository.JpaRepository;
