@@ -44,8 +44,11 @@ public class PaymentBuilder {
     }
 
     private void calculatePurchasedDays() {
-        var planCost = currentPlanCost.getAmount();
-        var dayCost = planCost / 31;
+        var grossPlanCost = currentPlanCost.getAmount();
+        var netPlanCost = user.getActivePromotion()
+            .map(promo -> promo.calculateNetCost(grossPlanCost))
+            .orElse(grossPlanCost);
+        var dayCost = netPlanCost / 31;
         purchasedDays = Math.toIntExact(Math.round(paymentAmount / dayCost));
     }
 

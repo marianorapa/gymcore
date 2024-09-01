@@ -32,4 +32,8 @@ public class Promotion extends BaseEntity{
     @OneToMany(mappedBy = "promotion", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PromotionAssignment> promotionAssignments;
 
+    public Double calculateNetCost(Double grossPlanCost) {
+        return grossPlanCost * discountPercentage.doubleValue() / 100;
+    }
+
 }

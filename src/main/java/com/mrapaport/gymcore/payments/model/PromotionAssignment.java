@@ -46,4 +46,8 @@ public class PromotionAssignment extends BaseEntity{
         var now = LocalDate.now();
         return (startDate.isEqual(now) || startDate.isBefore(now)) && (endDate.isEqual(now) || endDate.isAfter(now));
     }
+
+    public Double calculateNetCost(Double grossPlanCost) {
+        return promotion.calculateNetCost(grossPlanCost);
+    }
 }
