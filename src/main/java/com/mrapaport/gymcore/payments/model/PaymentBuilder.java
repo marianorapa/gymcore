@@ -1,8 +1,6 @@
 package com.mrapaport.gymcore.payments.model;
 
-import java.math.RoundingMode;
 import java.time.LocalDateTime;
-import java.util.Optional;
 import com.mrapaport.gymcore.users.model.User;
 
 public class PaymentBuilder {
@@ -13,7 +11,8 @@ public class PaymentBuilder {
     private Payment lastPayment;
     private PaymentPlanCost currentPlanCost;
     private LocalDateTime accessUntil;
-
+    private PromotionAssignment promotion;
+    
     public PaymentBuilder forUser(User user) {
         this.user = user;
         return this;
@@ -32,6 +31,7 @@ public class PaymentBuilder {
         calculatePurchasedDays();
         calculateAccessDuration();
         payment.setAccessUntil(accessUntil);
+        payment.setPromoAssignment(promotion);
         return payment;
     }
 
@@ -46,7 +46,10 @@ public class PaymentBuilder {
     private void calculatePurchasedDays() {
         var grossPlanCost = currentPlanCost.getAmount();
         var netPlanCost = user.getActivePromotion()
-            .map(promo -> promo.calculateNetCost(grossPlanCost))
+            .map(promo -> {
+                this.promotion = promo;
+                return promo.calculateNetCost(grossPlanCost);
+            })
             .orElse(grossPlanCost);
         var dayCost = netPlanCost / 31;
         purchasedDays = Math.toIntExact(Math.round(paymentAmount / dayCost));

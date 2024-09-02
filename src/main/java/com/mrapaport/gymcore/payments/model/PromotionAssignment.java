@@ -37,14 +37,20 @@ public class PromotionAssignment extends BaseEntity{
     @Column(name = "end_date")
     private LocalDate endDate;
 
+    @Column(name = "usage_exhausted")
+    private Boolean usageExhausted;
 
     public static PromotionAssignment forUserWithPromo(User user, Promotion promo) {
-       return new PromotionAssignment(user, promo, LocalDate.now(), LocalDate.now().plusMonths(1));
+       return new PromotionAssignment(user, promo, LocalDate.now(), LocalDate.now().plusMonths(1), false);
     }
 
     public boolean isActive() {
         var now = LocalDate.now();
-        return (startDate.isEqual(now) || startDate.isBefore(now)) && (endDate.isEqual(now) || endDate.isAfter(now));
+        return usageRemaining() && (startDate.isEqual(now) || startDate.isBefore(now)) && (endDate.isEqual(now) || endDate.isAfter(now));
+    }
+
+    private boolean usageRemaining() {
+        return usageExhausted == null || usageExhausted.equals(Boolean.FALSE);
     }
 
     public Double calculateNetCost(Double grossPlanCost) {

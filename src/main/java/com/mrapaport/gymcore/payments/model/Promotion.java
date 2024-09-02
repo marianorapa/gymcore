@@ -29,6 +29,9 @@ public class Promotion extends BaseEntity{
     @Column(name = "is_active", nullable = false)
     private Boolean isActive = true;
 
+    @Column(name = "max_usage_count", nullable = false)
+    private Integer maxUsageCount;
+
     @OneToMany(mappedBy = "promotion", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PromotionAssignment> promotionAssignments;
 

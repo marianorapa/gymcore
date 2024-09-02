@@ -56,4 +56,9 @@ public class PaymentPlanService {
         var promoAssignment = PromotionAssignment.forUserWithPromo(newUser, promo);
         return promoAssignmentRepo.save(promoAssignment);
     }
+
+    public void promotionExhausted(PromotionAssignment promoAssignment) {
+        promoAssignment.setUsageExhausted(true);
+        promoAssignmentRepo.save(promoAssignment);
+    }
 }

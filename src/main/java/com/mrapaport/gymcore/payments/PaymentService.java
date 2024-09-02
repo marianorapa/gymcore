@@ -3,6 +3,7 @@ package com.mrapaport.gymcore.payments;
 import com.mrapaport.gymcore.payments.model.Payment;
 import com.mrapaport.gymcore.payments.model.PaymentBuilder;
 import com.mrapaport.gymcore.payments.model.PaymentPlanCost;
+import com.mrapaport.gymcore.payments.model.PromotionAssignment;
 import com.mrapaport.gymcore.payments.model.enums.PaymentStatus;
 import com.mrapaport.gymcore.usage.UsageService;
 import com.mrapaport.gymcore.users.UserService;
@@ -63,6 +64,14 @@ public class PaymentService {
                 .withCurrentPlanCost(currentPlanCost).withLastPayment(lastPayment).build();
 
         repository.save(newPayment);
+
+        if (newPayment.hasPromo()) {
+            PromotionAssignment promoAssignment = newPayment.getPromoAssignment();
+            var promoUsages = repository.countPromoUsages(promoAssignment);
+            if (promoUsages >= promoAssignment.getPromotion().getMaxUsageCount()) {
+                paymentPlanService.promotionExhausted(promoAssignment);
+            }
+        }
     }
 
     public Optional<Payment> findLastUserPayment(User user) {

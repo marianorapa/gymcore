@@ -41,6 +41,10 @@ public class Payment extends BaseEntity {
     @Column(name = "access_until")
     private LocalDateTime accessUntil;
 
+    @ManyToOne
+    @JoinColumn(name = "user_promo_id")
+    private PromotionAssignment promoAssignment;
+
     public Payment() {}
 
     public String accessUntilPretty() {
@@ -53,5 +57,9 @@ public class Payment extends BaseEntity {
 
     public boolean isCurrentlyValid() {
         return LocalDateTime.now().isBefore(accessUntil);
+    }
+
+    public boolean hasPromo() {
+       return promoAssignment != null;
     }
 }

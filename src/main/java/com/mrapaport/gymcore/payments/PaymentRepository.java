@@ -1,6 +1,7 @@
 package com.mrapaport.gymcore.payments;
 
 import com.mrapaport.gymcore.payments.model.Payment;
+import com.mrapaport.gymcore.payments.model.PromotionAssignment;
 import com.mrapaport.gymcore.users.model.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -15,4 +16,7 @@ public interface PaymentRepository extends JpaRepository<Payment, UUID> {
 
     @Query("SELECT p FROM Payment p WHERE p.user = :user ORDER BY p.createdAt DESC LIMIT 1")
     Optional<Payment> findLastUserPayment(User user);
+
+    @Query("SELECT count(p) FROM Payment p WHERE p.promoAssignment = :promoAssignment")
+    Integer countPromoUsages(PromotionAssignment promoAssignment);
 }
