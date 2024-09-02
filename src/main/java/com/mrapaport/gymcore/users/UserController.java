@@ -53,9 +53,10 @@ public class UserController {
     @GetMapping("/list-clients")
     public String listClients(Model model,
                               @RequestParam(defaultValue = "0") int page,
-                              @RequestParam(defaultValue = "10") int size) {
+                              @RequestParam(defaultValue = "10") int size,
+                              @RequestParam(required = false) String search) {
         Pageable pageable = PageRequest.of(page, size);
-        Page<User> clientPage = userService.getAllClients(pageable);
+        Page<User> clientPage = userService.getAllClients(pageable, search);
         model.addAttribute("users", clientPage.getContent());
         model.addAttribute("page", clientPage);
         return "list_clients";

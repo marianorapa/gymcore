@@ -30,6 +30,19 @@
 <div class="main-content">
     <div class="container">
         <h1 class="text-center">Listar Clientes</h1>
+
+        <!-- Search Bar -->
+        <form th:action="@{/list-clients}" method="get" class="form-inline mb-3 d-flex justify-content-between">
+            <div>
+                <input type="text" name="search" class="form-control mr-2" placeholder="Nombre o DNI" 
+                       th:value="${search != null ? search : ''}">
+                <button type="submit" class="btn btn-primary">Buscar</button>
+            </div>
+            <div>
+                <a th:href="@{/list-clients}" class="btn btn-secondary">Reset</a>
+            </div>
+        </form>
+
         <div class="table-container">
             <table class="table table-striped">
                 <thead>
@@ -58,15 +71,15 @@
                 <nav>
                     <ul class="pagination">
                         <li th:classappend="${page.hasPrevious()} ? 'page-item' : 'page-item disabled'">
-                            <a th:href="@{/list-clients(page=${page.number-1}, size=${page.size})}" class="page-link">&laquo;</a>
+                            <a th:href="@{/list-clients(page=${page.number-1}, size=${page.size}, search=${search})}" class="page-link">&laquo;</a>
                         </li>
                         <li th:each="i : ${#numbers.sequence(0, page.totalPages-1)}"
                             th:classappend="${i == page.number} ? 'page-item active' : 'page-item'">
-                            <a th:href="@{/list-clients(page=${i}, size=${page.size})}" class="page-link"
+                            <a th:href="@{/list-clients(page=${i}, size=${page.size}, search=${search})}" class="page-link"
                                th:text="${i+1}">1</a>
                         </li>
                         <li th:classappend="${page.hasNext()} ? 'page-item' : 'page-item disabled'">
-                            <a th:href="@{/list-clients(page=${page.number+1}, size=${page.size})}" class="page-link">&raquo;</a>
+                            <a th:href="@{/list-clients(page=${page.number+1}, size=${page.size}, search=${search})}" class="page-link">&raquo;</a>
                         </li>
                     </ul>
                 </nav>

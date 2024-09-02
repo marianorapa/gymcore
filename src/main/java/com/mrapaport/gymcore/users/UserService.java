@@ -55,7 +55,10 @@ public class UserService {
         }).orElseThrow();
     }
 
-    public Page<User> getAllClients(Pageable pageable) {
+    public Page<User> getAllClients(Pageable pageable, String search) {
+        if (search != null && !search.isEmpty()) {
+            return repository.findAllByUsernameContainingIgnoreCaseOrDniContainingIgnoreCase(search, search, pageable);
+        }
         return repository.findAll(pageable);
     }
 
