@@ -22,3 +22,5 @@ services:
       POSTGRES_PASSWORD: "yourdbpassword"
     ports:
       - "5423:5432"
+    volumes:
+      - ./postgres-data:/var/lib/postgresql/data

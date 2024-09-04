@@ -30,3 +30,10 @@ build:
 .PHONY: rebuild-app
 rebuild-app:
 	docker compose -f $(DOCKER_COMPOSE_FILE) up -d --build app
+
+.PHONY: build-publish
+build-publish:
+	docker build --platform linux/amd64 -t marianrap/gymcore:latest .
+	docker login
+	docker push marianrap/gymcore:latest
+

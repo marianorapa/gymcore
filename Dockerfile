@@ -10,9 +10,6 @@ COPY gradlew /home/gradle/project/
 COPY build.gradle /home/gradle/project/
 COPY settings.gradle /home/gradle/project/
 
-# Download dependencies
-RUN ./gradlew build -x test --parallel
-
 # Copy the project files to the container
 COPY . /home/gradle/project/
 
@@ -26,10 +23,10 @@ FROM openjdk:17-jdk-slim
 WORKDIR /app
 
 # Copy the built jar file from the build container
-COPY --from=build /home/gradle/project/build/libs/your-app.jar /app/your-app.jar
+COPY --from=build /home/gradle/project/build/libs/gymcore-0.0.1-SNAPSHOT.jar /app/app.jar
 
 # Expose the port that your application runs on
 EXPOSE 8080
 
 # Set the entry point to run the jar file
-ENTRYPOINT ["java", "-jar", "/app/your-app.jar"]
+ENTRYPOINT ["java", "-jar", "/app/app.jar"]
