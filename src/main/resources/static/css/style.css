@@ -26,7 +26,7 @@ body {
     transition: background-color 0.3s, color 0.3s;
 }
 .sidebar a:hover, .sidebar a.active {
-    background-color: #ec9021;
+    background-color: #ffce0b;
     color: white;
     text-decoration: none;
 }
@@ -38,7 +38,7 @@ body {
     text-align: center;
     font-size: 22px;
     color: #fff;
-    background-color: #d58e08;
+    background-color: #ffbe0b;
     margin-bottom: 20px;
 }
 

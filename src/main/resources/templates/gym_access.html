@@ -54,7 +54,7 @@
             padding: 12px 20px;
             font-size: 16px;
             color: #fff;
-            background-color: #ec9021;
+            background-color: #ffce0b;
             border: none;
             border-radius: 4px;
             cursor: pointer;
@@ -63,7 +63,7 @@
             box-sizing: border-box;
         }
         .form-container button:hover {
-            background-color: #e17f06;
+            background-color: #ffce0b;
         }
         .message {
             padding: 12px;
@@ -84,10 +84,10 @@
 </head>
 <body>
 <div class="container background">
-    <img class="logo" src="https://img.freepik.com/vector-premium/logotipo-letra-barra-logotipo-fitness-gym-diseno-logotipo-vectorial-fitness-gimnasio-fitness_227744-337.jpg" alt="Gym Logo">
+    <img class="logo" th:src="@{images/skol-logo.jpeg}" alt="Gym Logo">
     <div class="form-container">
         <form th:action="@{/check-access}" method="post">
-            <input type="password" name="userId" placeholder="Ingrese su PIN" required autofocus/>
+            <input type="password" name="userId" placeholder="Ingrese su PIN o DNI" required autofocus/>
             <button type="submit">Ingresar</button>
         </form>
         <div id="message" class="message" th:classappend="${accessStatus != null ? (accessStatus ? ' access-granted' : ' access-denied') : ''}" th:styleappend="${showMessage ? '' : 'display:none;'}" th:text="${accessMessage != null ? accessMessage : ''}"></div>
