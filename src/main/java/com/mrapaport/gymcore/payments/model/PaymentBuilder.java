@@ -44,15 +44,20 @@ public class PaymentBuilder {
     }
 
     private void calculatePurchasedDays() {
-        var grossPlanCost = currentPlanCost.getAmount();
-        var netPlanCost = user.getActivePromotion()
-            .map(promo -> {
-                this.promotion = promo;
-                return promo.calculateNetCost(grossPlanCost);
-            })
-            .orElse(grossPlanCost);
-        var dayCost = netPlanCost / 31;
-        purchasedDays = Math.toIntExact(Math.round(paymentAmount / dayCost));
+        if (currentPlanCost.getAmount() <= 0) {
+            purchasedDays = 36500; // 100 years
+        }
+        else {
+            var grossPlanCost = currentPlanCost.getAmount();
+            var netPlanCost = user.getActivePromotion()
+                .map(promo -> {
+                    this.promotion = promo;
+                    return promo.calculateNetCost(grossPlanCost);
+                })
+                .orElse(grossPlanCost);
+            var dayCost = netPlanCost / 31;
+            purchasedDays = Math.toIntExact(Math.round(paymentAmount / dayCost));
+        }
     }
 
     public PaymentBuilder withLastPayment(Payment lastPayment) {
