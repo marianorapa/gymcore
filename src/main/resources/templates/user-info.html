@@ -39,8 +39,7 @@
             padding: 5px;
         }
         .create-payment-btn {
-            background-color: #28a745;
-            color: #fff;
+            margin-left: 15px;
             padding: 5px 10px;
         }
     </style>
@@ -87,12 +86,11 @@
         </div>
         <div class="pagos-header">
             <h2>Pagos</h2>
-            <form th:action="@{/create-payment/{id}(id=${user.id})}" method="post" class="create-payment-form" onsubmit="return confirmPayment()">
-                <label for="amount">Monto: $</label>
-                <input type="number" step="0.01" min="0" name="amount" id="amount" class="create-payment-input" required>
-                <button type="submit" class="btn create-payment-btn">
-                    Crear Pago
-                </button>
+            <form th:action="@{/create-payment/{id}(id=${user.id})}" method="post" class="create-payment-form" th:data-current-cost="${user.paymentPlan.currentCost()}">
+                <input type="hidden" name="amount" id="amount">
+                <input type="hidden" name="payment_method" id="payment_method">
+                <button type="button" class="btn btn-success create-payment-btn" onclick="submitPayment('Efectivo')">Efectivo</button>
+                <button type="button" class="btn btn-primary create-payment-btn" onclick="submitPayment('Transferencia')">Transferencia</button>
             </form>
         </div>
         <div class="table-container">
@@ -118,18 +116,14 @@
     </div>
 </div>
 
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 <script>
-    function openPaymentInfo(paymentId) {
-        window.open('/payment-info/' + paymentId, '_blank');
-    }
-
-    function confirmPayment() {
-        const amount = document.getElementById("amount").value;
-        return confirm("¿Está seguro de que desea registrar un pago por $" + amount + "?");
-    }
+function submitPayment(method) {
+    var amount = document.querySelector('.create-payment-form').dataset.currentCost;
+    document.getElementById('amount').value = amount;
+    document.getElementById('payment_method').value = method;
+    document.querySelector('.create-payment-form').submit();
+}
 </script>
+
 </body>
 </html>

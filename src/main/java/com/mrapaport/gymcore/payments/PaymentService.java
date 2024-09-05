@@ -56,12 +56,12 @@ public class PaymentService {
         return this.findById(paymentId).getUser();
     }
 
-    public void createPayment(UUID userId, double amount) {
+    public void createPayment(UUID userId, double amount, String paymentMethod) {
         var user = userService.findById(userId);
         var lastPayment = repository.findLastUserPayment(user).orElse(null);
         var currentPlanCost = paymentPlanService.getCurrentPlanCost(user.getPaymentPlan());
         var newPayment = PaymentBuilder.builder().forUser(user).withAmount(amount)
-                .withCurrentPlanCost(currentPlanCost).withLastPayment(lastPayment).build();
+                .withCurrentPlanCost(currentPlanCost).withLastPayment(lastPayment).withPaymentMethod(paymentMethod).build();
 
         repository.save(newPayment);
 

@@ -13,7 +13,6 @@ import java.text.NumberFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
-import java.util.UUID;
 
 @Entity
 @Table(name = "payments")
@@ -44,6 +43,9 @@ public class Payment extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "user_promo_id")
     private PromotionAssignment promoAssignment;
+
+    @Column(name = "payment_method")
+    private String paymentMethod;
 
     public Payment() {}
 

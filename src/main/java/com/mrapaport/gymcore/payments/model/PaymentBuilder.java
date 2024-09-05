@@ -12,6 +12,7 @@ public class PaymentBuilder {
     private PaymentPlanCost currentPlanCost;
     private LocalDateTime accessUntil;
     private PromotionAssignment promotion;
+    private String paymentMethod;
     
     public PaymentBuilder forUser(User user) {
         this.user = user;
@@ -28,6 +29,7 @@ public class PaymentBuilder {
         payment.setUser(user);
         payment.setAmount(paymentAmount);
         payment.setPaymentPlanCost(currentPlanCost);
+        payment.setPaymentMethod(paymentMethod);
         calculatePurchasedDays();
         calculateAccessDuration();
         payment.setAccessUntil(accessUntil);
@@ -74,4 +76,8 @@ public class PaymentBuilder {
         return this;
     }
 
+    public PaymentBuilder withPaymentMethod(String paymentMethod) {
+        this.paymentMethod = paymentMethod;
+        return this;
+    }
 }

@@ -51,8 +51,8 @@ public class PaymentController {
     }
 
     @PostMapping("/create-payment/{userId}")
-    public String createPayment(@PathVariable UUID userId, @RequestParam double amount, RedirectAttributes redirectAttributes) {
-        paymentService.createPayment(userId, amount);
+    public String createPayment(@PathVariable UUID userId, @RequestParam double amount, @RequestParam(name = "payment_method") String paymentMethod, RedirectAttributes redirectAttributes) {
+        paymentService.createPayment(userId, amount, paymentMethod);
 
         redirectAttributes.addFlashAttribute("message",
                 "Pago registrado exitosamente para el usuario con ID: " + userId);

@@ -33,4 +33,8 @@ public class PaymentPlan extends BaseEntity {
     public String currentCostPretty() {
         return NumberFormat.getCurrencyInstance(Locale.US).format(currentCost);
     }
+
+    public Double currentCost() {
+        return currentCost;
+    }
 }

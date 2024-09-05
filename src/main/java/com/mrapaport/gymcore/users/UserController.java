@@ -69,7 +69,7 @@ public class UserController {
         var user = userService.findById(id);
         Optional<Promotion> promo = user.getActivePromotion().map(PromotionAssignment::getPromotion);
         var promoDescription = promo.map(Promotion::getDescription).orElse("-");
-        Pageable pageable = PageRequest.of(page, 10, Sort.by("accessUntil").ascending());
+        Pageable pageable = PageRequest.of(page, 10, Sort.by("accessUntil").descending());
         Page<Payment> payments = paymentService.findByUserId(user.getId(), pageable);
 
         model.addAttribute("user", user);
