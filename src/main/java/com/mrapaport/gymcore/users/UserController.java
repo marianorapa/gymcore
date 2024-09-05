@@ -46,7 +46,9 @@ public class UserController {
         var user = userService.registerClient(username, dni, paymentPlanId, phoneNumber, promotionId);
         model.addAttribute("message", "Cliente registrado. Pin de acceso: " + user.getPin());
         var paymentPlans = paymentPlanService.getAllActivePaymentPlans();
+        var promos = paymentPlanService.getAllActivePromos();
         model.addAttribute("paymentPlans", paymentPlans);
+        model.addAttribute("promotions", promos);
         return "register_client";
     }
 
