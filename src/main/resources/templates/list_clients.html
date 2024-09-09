@@ -33,13 +33,16 @@
 
         <!-- Search Bar -->
         <form th:action="@{/list-clients}" method="get" class="form-inline mb-3 d-flex justify-content-between">
-            <div>
+            <div class="form-group">
                 <input type="text" name="search" class="form-control mr-2" placeholder="Nombre o DNI" 
                        th:value="${search != null ? search : ''}">
-                <button type="submit" class="btn btn-primary">Buscar</button>
+                <button type="submit" class="btn btn-primary mr-2">Buscar</button>
+                <a th:href="@{/list-clients}" class="btn btn-secondary">Limpiar</a>
             </div>
             <div>
-                <a th:href="@{/list-clients}" class="btn btn-secondary">Reset</a>
+                <a th:href="@{/register-client}" class="btn btn-success">
+                    <i class="fas fa-plus"></i> Nuevo socio
+                </a>
             </div>
         </form>
 
