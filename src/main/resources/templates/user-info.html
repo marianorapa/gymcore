@@ -86,7 +86,7 @@
         </div>
         <div class="pagos-header">
             <h2>Pagos</h2>
-            <form th:action="@{/create-payment/{id}(id=${user.id})}" method="post" class="create-payment-form" th:data-current-cost="${user.paymentPlan.currentCost()}">
+            <form th:action="@{/create-payment/{id}(id=${user.id})}" method="post" class="create-payment-form" th:data-current-cost="${user.currentCostWithPromo()}">
                 <input type="hidden" name="amount" id="amount">
                 <input type="hidden" name="payment_method" id="payment_method">
                 <button type="button" class="btn btn-success create-payment-btn" onclick="submitPayment('Efectivo')">Efectivo</button>

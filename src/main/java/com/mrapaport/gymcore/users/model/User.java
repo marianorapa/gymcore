@@ -91,4 +91,17 @@ public class User extends BaseEntity {
         return paymentPlan.currentCostPretty();
     }
 
+
+    public Double currentCostWithPromo() {
+        var activePromo = getActivePromotion();
+        if (activePromo.isPresent()) {
+            var promoDiscount = activePromo.get().getPromotion().getDiscountPercentage();
+            var currentPlanCost = paymentPlan.getCurrentCost();
+            var discountedPrice = BigDecimal.valueOf(currentPlanCost).multiply(BigDecimal.ONE.subtract(promoDiscount.divide(BigDecimal.valueOf(100L))));
+            return discountedPrice.doubleValue();
+        }
+        return paymentPlan.currentCost();
+    }
+
+
 }
