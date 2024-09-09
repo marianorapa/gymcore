@@ -54,8 +54,7 @@ public class PaymentController {
     public String createPayment(@PathVariable UUID userId, @RequestParam double amount, @RequestParam(name = "payment_method") String paymentMethod, RedirectAttributes redirectAttributes) {
         paymentService.createPayment(userId, amount, paymentMethod);
 
-        redirectAttributes.addFlashAttribute("message",
-                "Pago registrado exitosamente para el usuario con ID: " + userId);
+        redirectAttributes.addFlashAttribute("successMessage", "Pago por $" + amount + " registrado exitosamente");
 
         return "redirect:/user-info/" + userId;
     }
