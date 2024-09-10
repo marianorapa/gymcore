@@ -37,3 +37,8 @@ build-publish:
 	docker login
 	docker push marianrap/gymcore:latest
 
+.PHONY: build-publish-beta
+build-publish-beta:
+	docker build --platform linux/amd64 -t marianrap/gymcore:beta .
+	docker login
+	docker push marianrap/gymcore:beta

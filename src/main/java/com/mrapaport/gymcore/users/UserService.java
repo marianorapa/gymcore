@@ -7,7 +7,7 @@ import jakarta.persistence.EntityNotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
+import java.time.LocalDate;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -48,7 +48,7 @@ public class UserService {
         return optPlan.map(plan -> {
             var newUser = User.saveNew(repository, username, dni, plan, phoneNumber);    
             if (promotionId != null) {
-                paymentPlanService.addUserPromotion(newUser, promotionId);
+                paymentPlanService.addUserPromotion(newUser, promotionId, LocalDate.now().plusMonths(1));
             }
 
             return newUser;
@@ -71,5 +71,16 @@ public class UserService {
         var currentCost = paymentPlanService.getCurrentPlanCost(currentPlan);
         currentPlan.setCurrentCost(currentCost.getAmount());
         return user;
+    }
+
+    public void updateUser(UUID id, User userUpdates, String promotionId, LocalDate promotionEndDate) {
+        var user = findById(id);
+        user.setDni(userUpdates.getDni());
+        user.setUsername(userUpdates.getUsername());
+        user.setPaymentPlan(userUpdates.getPaymentPlan());
+        if (promotionId != null) {
+            paymentPlanService.addUserPromotion(user, UUID.fromString(promotionId), promotionEndDate);
+        }
+        repository.save(user);
     }
 }

@@ -3,6 +3,7 @@ package com.mrapaport.gymcore.users;
 import com.mrapaport.gymcore.payments.PaymentPlanService;
 import com.mrapaport.gymcore.payments.PaymentService;
 import com.mrapaport.gymcore.payments.model.Payment;
+import com.mrapaport.gymcore.payments.model.PaymentPlan;
 import com.mrapaport.gymcore.payments.model.Promotion;
 import com.mrapaport.gymcore.payments.model.PromotionAssignment;
 import com.mrapaport.gymcore.users.model.User;
@@ -11,12 +12,17 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Order;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -82,5 +88,28 @@ public class UserController {
     }
 
 
+    @GetMapping("/edit-client/{id}")
+    public String showEditClientForm(@PathVariable UUID id, Model model) {
+        User user = userService.findById(id);
+        List<PaymentPlan> paymentPlans = paymentPlanService.getAllActivePaymentPlans();
+        List<Promotion> promotions = paymentPlanService.getAllActivePromos();
+        model.addAttribute("user", user);
+        user.getActivePromotion().ifPresent(promo -> {
+            model.addAttribute("activePromoId", promo.getId());
+            model.addAttribute("promotionEndDate", promo.getEndDate());
+        });
+        model.addAttribute("paymentPlans", paymentPlans);
+        model.addAttribute("promotions", promotions);
+        return "edit-client";
+    }
+
+    @PostMapping("/update-client/{id}")
+    public String updateClient(@PathVariable UUID id, @ModelAttribute User user, @RequestParam String promotionId, 
+    @RequestParam("promotionEndDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate promotionEndDate,
+    RedirectAttributes redirectAttributes) {
+        userService.updateUser(id, user, promotionId, promotionEndDate);
+        redirectAttributes.addFlashAttribute("successMessage", "Socio actualizado correctamente");
+        return "redirect:/user-info/" + id;
+    }
 
 }

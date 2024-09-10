@@ -40,8 +40,8 @@ public class PromotionAssignment extends BaseEntity{
     @Column(name = "usage_exhausted")
     private Boolean usageExhausted;
 
-    public static PromotionAssignment forUserWithPromo(User user, Promotion promo) {
-       return new PromotionAssignment(user, promo, LocalDate.now(), LocalDate.now().plusMonths(1), false);
+    public static PromotionAssignment forUserWithPromo(User user, Promotion promo, LocalDate endDate) {
+       return new PromotionAssignment(user, promo, LocalDate.now(), endDate, false);
     }
 
     public boolean isActive() {

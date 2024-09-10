@@ -2,6 +2,7 @@ package com.mrapaport.gymcore.payments;
 
 import com.mrapaport.gymcore.payments.model.PaymentPlan;
 import com.mrapaport.gymcore.payments.model.PaymentPlanCost;
+import com.mrapaport.gymcore.payments.model.Promotion;
 import com.mrapaport.gymcore.payments.model.PromotionAssignment;
 import com.mrapaport.gymcore.payments.repository.PaymentPlanCostRepository;
 import com.mrapaport.gymcore.payments.repository.PaymentPlanRepository;
@@ -10,7 +11,7 @@ import com.mrapaport.gymcore.payments.repository.PromotionRepository;
 import com.mrapaport.gymcore.users.model.User;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
-
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -47,14 +48,26 @@ public class PaymentPlanService {
                         "Cost not found for payment plan " + currentPlan.getId()));
     }
 
-    public Object getAllActivePromos() {
+    public List<Promotion> getAllActivePromos() {
         return promoRepository.findAllActivePromos();
     }
 
-    public PromotionAssignment addUserPromotion(User newUser, UUID promotionId) {
+    public PromotionAssignment addUserPromotion(User user, UUID promotionId, LocalDate promoEndDate) {
         var promo = promoRepository.findById(promotionId).orElseThrow(() -> new EntityNotFoundException());
-        var promoAssignment = PromotionAssignment.forUserWithPromo(newUser, promo);
-        return promoAssignmentRepo.save(promoAssignment);
+        var activePromoOpt = user.getActivePromotion();
+        if (activePromoOpt.isPresent() && activePromoOpt.get().getId() != promotionId) {
+            var promoAssignment = PromotionAssignment.forUserWithPromo(user, promo, promoEndDate);
+            return promoAssignmentRepo.save(promoAssignment);
+        }
+        else {
+            return activePromoOpt.get();
+        }
+        
+    }
+
+    private void finalizePromotion(PromotionAssignment promoAssignment) {
+        promoAssignment.setEndDate(LocalDate.now());
+        promoAssignmentRepo.save(promoAssignment);
     }
 
     public void promotionExhausted(PromotionAssignment promoAssignment) {

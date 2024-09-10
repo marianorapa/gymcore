@@ -33,11 +33,11 @@
 
         <!-- Search Bar -->
         <form th:action="@{/list-clients}" method="get" class="form-inline mb-3 d-flex justify-content-between">
-            <div class="form-group">
+            <div>
                 <input type="text" name="search" class="form-control mr-2" placeholder="Nombre o DNI" 
                        th:value="${search != null ? search : ''}">
-                <button type="submit" class="btn btn-primary mr-2">Buscar</button>
-                <a th:href="@{/list-clients}" class="btn btn-secondary">Limpiar</a>
+                <button type="submit" class="btn btn-primary">Buscar</button>
+                <a th:href="@{/list-clients}" class="btn btn-secondary ml-2">Reset</a>
             </div>
             <div>
                 <a th:href="@{/register-client}" class="btn btn-success">
@@ -62,6 +62,9 @@
                     <td>
                         <a th:href="@{/user-info/{id}(id=${user.id})}" class="btn btn-info btn-sm">
                             <i class="fas fa-info-circle"></i> Info
+                        </a>
+                        <a th:href="@{/edit-client/{id}(id=${user.id})}" class="btn btn-warning btn-sm ml-2">
+                            <i class="fas fa-edit"></i> Editar
                         </a>
                     </td>
                 </tr>
