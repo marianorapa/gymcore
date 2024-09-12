@@ -3,6 +3,10 @@ package com.mrapaport.gymcore.payments;
 import com.mrapaport.gymcore.payments.model.Payment;
 import com.mrapaport.gymcore.payments.model.enums.PaymentStatus;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -38,7 +42,7 @@ public class PaymentController {
         List<PaymentStatus> paymentStatuses = Arrays.asList(PaymentStatus.values());
         model.addAttribute("payment", payment);
         model.addAttribute("paymentStatuses", paymentStatuses);
-        return "payment-info";
+        return "payment_info";
     }
 
     @PostMapping("/update-payment-status")
@@ -57,5 +61,24 @@ public class PaymentController {
         redirectAttributes.addFlashAttribute("successMessage", "Pago por $" + amount + " registrado exitosamente");
 
         return "redirect:/user-info/" + userId;
+    }
+
+     @GetMapping("/list-payments")
+    public String listPayments(
+            @RequestParam(name = "page", required = false, defaultValue = "0") int page,
+            @RequestParam(name = "size", required = false, defaultValue = "10") int size,
+            @RequestParam(name = "startDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+            @RequestParam(name = "endDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate,
+            Model model) {
+        
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Payment> paymentPage = paymentService.findPaymentsByDateRange(startDate, endDate, pageable);
+        
+        model.addAttribute("payments", paymentPage.getContent());
+        model.addAttribute("page", paymentPage);
+        model.addAttribute("startDate", startDate);
+        model.addAttribute("endDate", endDate);
+        
+        return "list_payments";
     }
 }

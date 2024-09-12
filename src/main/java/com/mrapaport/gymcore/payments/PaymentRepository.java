@@ -7,6 +7,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -19,4 +20,9 @@ public interface PaymentRepository extends JpaRepository<Payment, UUID> {
 
     @Query("SELECT count(p) FROM Payment p WHERE p.promoAssignment = :promoAssignment")
     Integer countPromoUsages(PromotionAssignment promoAssignment);
+
+    Page<Payment> findAllByAccessUntilBetween(LocalDateTime startDate, LocalDateTime endDate, Pageable pageable);
+    Page<Payment> findAllByAccessUntilAfter(LocalDateTime startDate, Pageable pageable);
+    Page<Payment> findAllByAccessUntilBefore(LocalDateTime endDate, Pageable pageable);
+
 }

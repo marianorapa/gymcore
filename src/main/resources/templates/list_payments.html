@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Pagos</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            display: flex;
+            background-color: #f8f9fa;
+        }
+        .main-content {
+            margin-left: 100px;
+            width: 100%;
+            padding: 20px;
+        }
+        .table-container {
+            margin-top: 20px;
+        }
+        .pagination {
+            justify-content: center;
+        }
+        .filter-container {
+            display: flex;
+            justify-content: space-between;
+        }
+        .filter-container .form-control, .filter-container .btn {
+            margin-right: 10px;
+        }
+    </style>
+</head>
+<body>
+<div th:replace="sidebar :: sidebar"></div>
+
+<div class="main-content">
+    <div class="container">
+        <h1 class="text-center">Pagos</h1>
+
+        <!-- Filter Bar -->
+        <form th:action="@{/list-payments}" method="get" class="form-inline mb-3 filter-container">
+            <div>
+                <input type="date" name="startDate" class="form-control" th:value="${startDate}">
+                <input type="date" name="endDate" class="form-control" th:value="${endDate}">
+                <button type="submit" class="btn btn-primary">Filtrar</button>
+                <a th:href="@{/list-payments}" class="btn btn-secondary ml-2">Reset</a>
+            </div>
+        </form>
+
+        <div class="table-container">
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th>Socio</th>
+                    <th>Monto</th>
+                    <th>Acceso Hasta</th>
+                    <th>Método de pago</th>
+                    <th>Promoción</th>
+                    
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="payment : ${payments}">
+                    <td th:text="${payment.user.username}"></td>
+                    <td th:text="${payment.amountPretty()}"></td>
+                    <td th:text="${payment.accessUntilPretty()}"></td>
+                    <td th:text="${payment.paymentMethod}"></td>
+                    <td th:text="${payment.hasPromo() ? 'Si' : 'No'}"></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                <nav>
+                    <ul class="pagination">
+                        <li th:classappend="${page.hasPrevious()} ? 'page-item' : 'page-item disabled'">
+                            <a th:href="@{/list-payments(page=${page.number-1}, size=${page.size}, startDate=${startDate}, endDate=${endDate})}" class="page-link">&laquo;</a>
+                        </li>
+                        <li th:each="i : ${#numbers.sequence(0, page.totalPages-1)}"
+                            th:classappend="${i == page.number} ? 'page-item active' : 'page-item'">
+                            <a th:href="@{/list-payments(page=${i}, size=${page.size}, startDate=${startDate}, endDate=${endDate})}" class="page-link"
+                               th:text="${i+1}">1</a>
+                        </li>
+                        <li th:classappend="${page.hasNext()} ? 'page-item' : 'page-item disabled'">
+                            <a th:href="@{/list-payments(page=${page.number+1}, size=${page.size}, startDate=${startDate}, endDate=${endDate})}" class="page-link">&raquo;</a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
