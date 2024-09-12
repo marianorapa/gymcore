@@ -10,6 +10,6 @@ import java.util.UUID;
 
 public interface PaymentPlanRepository extends JpaRepository<PaymentPlan, UUID> {
 
-    @Query("SELECT p FROM PaymentPlan p where p.validUntil > :dateUntil order by p.planName")
+    @Query("SELECT p FROM PaymentPlan p where p.validUntil is NULL OR p.validUntil > :dateUntil order by p.planName")
     List<PaymentPlan> findAllActivePlansUntil(LocalDateTime dateUntil);
 }
