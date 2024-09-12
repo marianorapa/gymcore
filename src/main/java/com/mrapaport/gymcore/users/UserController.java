@@ -105,7 +105,7 @@ public class UserController {
 
     @PostMapping("/update-client/{id}")
     public String updateClient(@PathVariable UUID id, @ModelAttribute User user, @RequestParam String promotionId, 
-    @RequestParam("promotionEndDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate promotionEndDate,
+    @RequestParam(name = "promotionEndDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate promotionEndDate,
     RedirectAttributes redirectAttributes) {
         userService.updateUser(id, user, promotionId, promotionEndDate);
         redirectAttributes.addFlashAttribute("successMessage", "Socio actualizado correctamente");

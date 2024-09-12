@@ -55,14 +55,20 @@ public class PaymentPlanService {
     public PromotionAssignment addUserPromotion(User user, UUID promotionId, LocalDate promoEndDate) {
         var promo = promoRepository.findById(promotionId).orElseThrow(() -> new EntityNotFoundException());
         var activePromoOpt = user.getActivePromotion();
-        if (activePromoOpt.isPresent() && activePromoOpt.get().getId() != promotionId) {
+        if (userHasPromoButNewOneIsDifferent(promotionId, activePromoOpt) || activePromoOpt.isEmpty()) {
+            if (activePromoOpt.isPresent()) {
+                finalizePromotion(activePromoOpt.get());
+            }
             var promoAssignment = PromotionAssignment.forUserWithPromo(user, promo, promoEndDate);
             return promoAssignmentRepo.save(promoAssignment);
         }
         else {
             return activePromoOpt.get();
         }
-        
+    }
+
+    private boolean userHasPromoButNewOneIsDifferent(UUID promotionId, Optional<PromotionAssignment> activePromoOpt) {
+        return activePromoOpt.isPresent() && activePromoOpt.get().getId() != promotionId;
     }
 
     private void finalizePromotion(PromotionAssignment promoAssignment) {

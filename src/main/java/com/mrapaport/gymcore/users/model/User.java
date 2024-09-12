@@ -74,7 +74,7 @@ public class User extends BaseEntity {
     }
 
     public Optional<PromotionAssignment> getActivePromotion() {
-        if (this.promotionAssignments.size() > 0) {
+        if (this.promotionAssignments != null && this.promotionAssignments.size() > 0) {
             return this.promotionAssignments.stream().filter(promoAssignment -> promoAssignment.isActive()).findFirst();
         }
         return Optional.empty();

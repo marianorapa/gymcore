@@ -46,7 +46,7 @@ public class PromotionAssignment extends BaseEntity{
 
     public boolean isActive() {
         var now = LocalDate.now();
-        return usageRemaining() && (startDate.isEqual(now) || startDate.isBefore(now)) && (endDate.isEqual(now) || endDate.isAfter(now));
+        return usageRemaining() && (startDate != null &&(startDate.isEqual(now) || startDate.isBefore(now))) && (endDate != null && (endDate.isEqual(now) || endDate.isAfter(now)));
     }
 
     private boolean usageRemaining() {

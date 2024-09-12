@@ -78,7 +78,7 @@ public class UserService {
         user.setDni(userUpdates.getDni());
         user.setUsername(userUpdates.getUsername());
         user.setPaymentPlan(userUpdates.getPaymentPlan());
-        if (promotionId != null) {
+        if (promotionId != null && !promotionId.isBlank()) {
             paymentPlanService.addUserPromotion(user, UUID.fromString(promotionId), promotionEndDate);
         }
         repository.save(user);
