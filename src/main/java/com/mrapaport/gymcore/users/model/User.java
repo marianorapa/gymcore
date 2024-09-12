@@ -15,6 +15,7 @@ import lombok.EqualsAndHashCode;
 import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.text.NumberFormat;
+import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
@@ -46,6 +47,9 @@ public class User extends BaseEntity {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PromotionAssignment> promotionAssignments;
 
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Payment> payments;
+
     public static User saveNew(UserRepository repository, String username, String dni,
             PaymentPlan paymentPlan, String phoneNumber) {
         var user = new User();
@@ -68,9 +72,13 @@ public class User extends BaseEntity {
         return repository.findByDni(dni).isEmpty();
     }
 
-    public boolean hasValidAccess(PaymentService paymentService) {
-        return paymentService.findLastUserPayment(this).map(Payment::isCurrentlyValid)
-                .orElse(false);
+    public boolean hasValidAccess() {
+        return Optional.ofNullable(payments).map(existingPayments -> existingPayments.stream().max(Comparator.comparing(Payment::getAccessUntil)).map(Payment::isCurrentlyValid)
+                .orElse(false)).orElse(false);
+    }
+
+    public String getValidUntilPretty() {
+        return Optional.ofNullable(payments).map(existingPayments -> existingPayments.stream().max(Comparator.comparing(Payment::getAccessUntil)).map(Payment::accessUntilPretty).orElse("-")).orElse("-");
     }
 
     public Optional<PromotionAssignment> getActivePromotion() {

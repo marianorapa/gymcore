@@ -28,7 +28,7 @@ public class UsageService {
     public boolean determineAccess(String userId) {
         var optUser = userService.findByUserId(userId);
         return optUser.map(user -> {
-            var valid = user.hasValidAccess(paymentService);
+            var valid = user.hasValidAccess();
             usageLogRepository.save(UsageLog.forUser(optUser.get(), valid));
             return valid;
         }).orElse(false);
