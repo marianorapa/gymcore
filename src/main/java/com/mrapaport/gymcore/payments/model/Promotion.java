@@ -36,7 +36,7 @@ public class Promotion extends BaseEntity{
     private List<PromotionAssignment> promotionAssignments;
 
     public Double calculateNetCost(Double grossPlanCost) {
-        return grossPlanCost * discountPercentage.doubleValue() / 100;
+        return grossPlanCost * (100 - discountPercentage.doubleValue()) / 100;
     }
 
 }
