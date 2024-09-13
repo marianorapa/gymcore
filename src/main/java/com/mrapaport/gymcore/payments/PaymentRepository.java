@@ -21,8 +21,8 @@ public interface PaymentRepository extends JpaRepository<Payment, UUID> {
     @Query("SELECT count(p) FROM Payment p WHERE p.promoAssignment = :promoAssignment")
     Integer countPromoUsages(PromotionAssignment promoAssignment);
 
-    Page<Payment> findAllByAccessUntilBetween(LocalDateTime startDate, LocalDateTime endDate, Pageable pageable);
-    Page<Payment> findAllByAccessUntilAfter(LocalDateTime startDate, Pageable pageable);
-    Page<Payment> findAllByAccessUntilBefore(LocalDateTime endDate, Pageable pageable);
+    Page<Payment> findAllByCreatedAtBetween(LocalDateTime startDate, LocalDateTime endDate, Pageable pageable);
+    Page<Payment> findAllByCreatedAtAfter(LocalDateTime startDate, Pageable pageable);
+    Page<Payment> findAllByCreatedAtBefore(LocalDateTime endDate, Pageable pageable);
 
 }

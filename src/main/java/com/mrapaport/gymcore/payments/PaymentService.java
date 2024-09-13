@@ -80,11 +80,11 @@ public class PaymentService {
 
     public Page<Payment> findPaymentsByDateRange(LocalDate startDate, LocalDate endDate, Pageable pageable) {
         if (startDate != null && endDate != null) {
-            return repository.findAllByAccessUntilBetween(startDate.atStartOfDay(), endDate.atTime(23, 59, 59), pageable);
+            return repository.findAllByCreatedAtBetween(startDate.atStartOfDay(), endDate.atTime(23, 59, 59), pageable);
         } else if (startDate != null) {
-            return repository.findAllByAccessUntilAfter(startDate.atStartOfDay(), pageable);
+            return repository.findAllByCreatedAtAfter(startDate.atStartOfDay(), pageable);
         } else if (endDate != null) {
-            return repository.findAllByAccessUntilBefore(endDate.atTime(23, 59, 59), pageable);
+            return repository.findAllByCreatedAtBefore(endDate.atTime(23, 59, 59), pageable);
         } else {
             return repository.findAll(pageable);
         }
