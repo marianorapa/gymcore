@@ -6,6 +6,8 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Order;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -66,16 +68,17 @@ public class PaymentController {
      @GetMapping("/list-payments")
     public String listPayments(
             @RequestParam(name = "page", required = false, defaultValue = "0") int page,
-            @RequestParam(name = "size", required = false, defaultValue = "10") int size,
+            @RequestParam(name = "size", required = false, defaultValue = "100") int size,
             @RequestParam(name = "startDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
             @RequestParam(name = "endDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate,
             Model model) {
         
-        Pageable pageable = PageRequest.of(page, size);
-        Page<Payment> paymentPage = paymentService.findPaymentsByDateRange(startDate, endDate, pageable);
+        Pageable pageable = PageRequest.of(page, size).withSort(Sort.by(Order.desc("createdAt")));
+        var paymentSummary = paymentService.getPaymentsAndSummary(startDate, endDate, pageable);
         
-        model.addAttribute("payments", paymentPage.getContent());
-        model.addAttribute("page", paymentPage);
+        model.addAttribute("payments", paymentSummary.payments().getContent());
+        model.addAttribute("summary", paymentSummary.amountByPaymentType());
+        model.addAttribute("page", paymentSummary.payments());
         model.addAttribute("startDate", startDate);
         model.addAttribute("endDate", endDate);
         

@@ -3,6 +3,7 @@ package com.mrapaport.gymcore.payments;
 import com.mrapaport.gymcore.payments.model.Payment;
 import com.mrapaport.gymcore.payments.model.PaymentBuilder;
 import com.mrapaport.gymcore.payments.model.PaymentPlanCost;
+import com.mrapaport.gymcore.payments.model.PaymentsWithSummary;
 import com.mrapaport.gymcore.payments.model.PromotionAssignment;
 import com.mrapaport.gymcore.payments.model.enums.PaymentStatus;
 import com.mrapaport.gymcore.usage.UsageService;
@@ -13,6 +14,7 @@ import com.mrapaport.gymcore.users.model.User;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import org.flywaydb.core.api.configuration.Configuration;
+import org.hibernate.mapping.Array;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -20,6 +22,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -78,16 +81,19 @@ public class PaymentService {
         return repository.findLastUserPayment(user);
     }
 
-    public Page<Payment> findPaymentsByDateRange(LocalDate startDate, LocalDate endDate, Pageable pageable) {
+    public PaymentsWithSummary getPaymentsAndSummary(LocalDate startDate, LocalDate endDate, Pageable pageable) {
+        Page<Payment> payments;
         if (startDate != null && endDate != null) {
-            return repository.findAllByCreatedAtBetween(startDate.atStartOfDay(), endDate.atTime(23, 59, 59), pageable);
+            payments = repository.findAllByCreatedAtBetween(startDate.atStartOfDay(), endDate.atTime(23, 59, 59), pageable);
         } else if (startDate != null) {
-            return repository.findAllByCreatedAtAfter(startDate.atStartOfDay(), pageable);
+            payments = repository.findAllByCreatedAtAfter(startDate.atStartOfDay(), pageable);
         } else if (endDate != null) {
-            return repository.findAllByCreatedAtBefore(endDate.atTime(23, 59, 59), pageable);
+            payments = repository.findAllByCreatedAtBefore(endDate.atTime(23, 59, 59), pageable);
         } else {
-            return repository.findAll(pageable);
+            payments = repository.findAll(pageable);
         }
+
+        return new PaymentsWithSummary(payments, PaymentUtils.buildSummaryByType(payments));
     }
     
 }

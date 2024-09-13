@@ -64,4 +64,8 @@ public class Payment extends BaseEntity {
     public boolean hasPromo() {
        return promoAssignment != null;
     }
+
+    public String getDiscountPercentage() {
+        return promoAssignment != null ? promoAssignment.getPromotion().getDiscountPercentage().toString() + "%" : "";
+    }
 }

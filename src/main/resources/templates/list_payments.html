@@ -29,6 +29,10 @@
         .filter-container .form-control, .filter-container .btn {
             margin-right: 10px;
         }
+        .summary-table {
+            display: flex;
+            margin-top: 10px;
+        }
     </style>
 </head>
 <body>
@@ -48,26 +52,47 @@
             </div>
         </form>
 
+        <!-- Summary Table -->
+        <div class="summary-table">
+            <table class="table table-sm">
+                <thead>
+                    <tr>
+                        <th>Método de pago</th>
+                        <th>Total Monto</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="entry : ${summary}">
+                        <td th:text="${entry.key}"></td>
+                        <td th:text="${entry.value}"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
         <div class="table-container">
             <table class="table table-striped">
                 <thead>
-                <tr>
-                    <th>Socio</th>
-                    <th>Monto</th>
-                    <th>Acceso Hasta</th>
-                    <th>Método de pago</th>
-                    <th>Promoción</th>
-                    
-                </tr>
+                    <tr>
+                        <th>Fecha de Creación</th>
+                        <th>Socio</th>
+                        <th>Monto</th>
+                        <th>Acceso Hasta</th>
+                        <th>Método de pago</th>
+                        <th>Promoción</th>
+                        <th>Descuento</th>
+                    </tr>
                 </thead>
                 <tbody>
-                <tr th:each="payment : ${payments}">
-                    <td th:text="${payment.user.username}"></td>
-                    <td th:text="${payment.amountPretty()}"></td>
-                    <td th:text="${payment.accessUntilPretty()}"></td>
-                    <td th:text="${payment.paymentMethod}"></td>
-                    <td th:text="${payment.hasPromo() ? 'Si' : 'No'}"></td>
-                </tr>
+                    <tr th:each="payment : ${payments}">
+                        <td th:text="${payment.createdAtPretty()}"></td>
+                        <td th:text="${payment.user.username}"></td>
+                        <td th:text="${payment.amountPretty()}"></td>
+                        <td th:text="${payment.accessUntilPretty()}"></td>
+                        <td th:text="${payment.paymentMethod}"></td>
+                        <td th:text="${payment.hasPromo() ? 'Si' : 'No'}"></td>
+                        <td th:text="${payment.getDiscountPercentage()}"></td>
+                    </tr>
                 </tbody>
             </table>
         </div>

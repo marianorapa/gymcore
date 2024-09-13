@@ -22,6 +22,9 @@
         .pagination {
             justify-content: center;
         }
+        .table-striped tbody tr.invalid-access {
+            background-color: #f6aeb4; /* Light red background for invalid access rows */
+        }
     </style>
 </head>
 <body>
@@ -58,7 +61,7 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr th:each="user : ${users}">
+                <tr th:each="user : ${users}" th:classappend="${!user.hasValidAccess()} ? 'invalid-access' : ''">
                     <td th:text="${user.username}"></td>
                     <td th:text="${user.dni}"></td>
                     <td th:text="${user.getValidUntilPretty()}"></td>
