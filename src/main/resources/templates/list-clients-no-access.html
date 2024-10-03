@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Clientes sin Acceso</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            display: flex;
+            background-color: #f8f9fa;
+        }
+        .main-content {
+            margin-left: 100px;
+            width: 100%;
+            padding: 20px;
+        }
+        .table-container {
+            margin-top: 20px;
+        }
+        .pagination {
+            justify-content: center;
+        }
+    </style>
+</head>
+<body>
+<div th:replace="sidebar :: sidebar"></div>
+
+<div class="main-content">
+    <div class="container">
+        <h1 class="text-center">Socios Vencidos</h1>
+
+        <div class="table-container">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Teléfono</th>
+                        <th>Último Pago</th>
+                        <th>Acceso Hasta</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="client : ${clients}">
+                        <td th:text="${client.username}"></td>
+                        <td th:text="${client.phoneNumber}"></td>
+                        <td th:text="${client.lastPaymentDatePretty()}"></td>
+                        <td th:text="${client.getValidUntilPretty()}"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+</div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

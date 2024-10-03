@@ -112,4 +112,12 @@ public class UserController {
         return "redirect:/user-info/" + id;
     }
 
+    @GetMapping("/list-clients-no-access")
+    public String listClientsNoAccess(
+            Model model) {
+        List<User> clientPage = userService.findClientsWithoutValidAccess();
+        model.addAttribute("clients", clientPage);
+        return "list-clients-no-access";
+    }
+
 }

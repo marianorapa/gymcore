@@ -5,12 +5,14 @@ import com.mrapaport.gymcore.payments.model.PaymentPlan;
 import com.mrapaport.gymcore.users.model.User;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-
+import java.util.stream.Collectors;
 import static com.mrapaport.gymcore.common.utils.IntegerUtils.isInt;
 
 @Service
@@ -82,5 +84,11 @@ public class UserService {
             paymentPlanService.addUserPromotion(user, UUID.fromString(promotionId), promotionEndDate);
         }
         repository.save(user);
+    }
+
+    public List<User> findClientsWithoutValidAccess() {
+        return repository.findAll().stream()
+                .filter(user -> !user.hasValidAccess())
+                .collect(Collectors.toList());
     }
 }

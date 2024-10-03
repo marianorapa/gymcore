@@ -81,6 +81,10 @@ public class User extends BaseEntity {
         return Optional.ofNullable(payments).map(existingPayments -> existingPayments.stream().max(Comparator.comparing(Payment::getAccessUntil)).map(Payment::accessUntilPretty).orElse("-")).orElse("-");
     }
 
+    public String lastPaymentDatePretty() {
+        return Optional.ofNullable(payments).map(existingPayments -> existingPayments.stream().max(Comparator.comparing(Payment::getAccessUntil)).map(Payment::createdAtPretty).orElse("-")).orElse("-");
+    }
+
     public Optional<PromotionAssignment> getActivePromotion() {
         if (this.promotionAssignments != null && this.promotionAssignments.size() > 0) {
             return this.promotionAssignments.stream().filter(promoAssignment -> promoAssignment.isActive()).findFirst();
