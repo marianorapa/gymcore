@@ -1,6 +1,7 @@
 package com.mrapaport.gymcore.payments.model;
 
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import com.mrapaport.gymcore.users.model.User;
 
 public class PaymentBuilder {
@@ -38,11 +39,32 @@ public class PaymentBuilder {
     }
 
     private void calculateAccessDuration() {
-        var startingDate =
-                lastPayment != null && lastPayment.getAccessUntil().isAfter(LocalDateTime.now())
-                        ? lastPayment.getAccessUntil()
-                        : LocalDateTime.now();
+        var startingDate = determineStartingDate();
         accessUntil = startingDate.plusDays(purchasedDays);
+    }
+
+    private LocalDateTime determineStartingDate() {
+        if (lastPayment != null) {
+            return startingDateBasedFromLastPayment();
+        }
+        return LocalDateTime.now();
+    }
+
+    private LocalDateTime startingDateBasedFromLastPayment() {
+        if (lastPaymentStillAllowsAccess() || lastPaymentRecentlyExpired()) {
+            return lastPayment.getAccessUntil();
+        }
+        else {
+            return LocalDateTime.now();
+        }
+    }
+
+    private boolean lastPaymentRecentlyExpired() {
+        return lastPayment.getAccessUntil().isAfter(LocalDateTime.now().minus(10, ChronoUnit.DAYS));
+    }
+
+    private boolean lastPaymentStillAllowsAccess() {
+        return lastPayment.getAccessUntil().isAfter(LocalDateTime.now());
     }
 
     private void calculatePurchasedDays() {
