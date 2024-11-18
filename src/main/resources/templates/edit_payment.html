@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Actualizar Pago</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            display: flex;
+            background-color: #f8f9fa;
+        }
+
+        .main-content {
+            margin-left: 250px;
+            /* Adjusted for the sidebar width */
+            width: calc(100% - 250px);
+            padding: 20px;
+        }
+
+        .alert-container {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
+
+        .form-container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .form-group {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .form-group label {
+            width: 150px;
+            margin-right: 10px;
+            font-weight: bold;
+        }
+
+        .form-group .input-group {
+            flex-grow: 1;
+        }
+    </style>
+</head>
+
+<body>
+    <div th:replace="sidebar :: sidebar"></div>
+    <div class="main-content">
+        <div class="alert-container" th:if="${message}">
+            <div class="alert alert-info alert-dismissible fade show" role="alert">
+                <span th:text="${message}"></span>
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        </div>
+        <div class="container">
+            <h1 class="text-center">Actualizar Pago</h1>
+            <div class="form-container">
+                <form id="updatePaymentForm" th:action="@{/update-payment/{id}(id=${payment.id})}" method="post" class="needs-validation" novalidate>
+                    <div class="form-group">
+                        <label for="username">Nombre de Usuario</label>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="fas fa-user"></i></span>
+                            </div>
+                            <input type="text" name="username" id="username" class="form-control" th:value="${payment.user.username}" readonly>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="amount">Monto</label>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="fas fa-dollar-sign"></i></span>
+                            </div>
+                            <input type="text" name="amount" id="amount" class="form-control" th:value="${payment.amount}" readonly>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="createdDate">Fecha de Creación</label>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="fas fa-calendar"></i></span>
+                            </div>
+                            <input type="text" name="createdDate" id="createdDate" class="form-control" th:value="${payment.createdAtPretty}" readonly>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="accessUntil">Acceso Hasta</label>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="fas fa-calendar-alt"></i></span>
+                            </div>
+                            <input type="date" name="accessUntil" id="accessUntil" class="form-control" th:value="${payment.accessUntilDate}">
+                            <div class="invalid-feedback">Por favor, ingrese una fecha válida.</div>
+                        </div>
+                    </div>
+                    <button type="button" class="btn btn-primary btn-block" id="previewButton">Previsualizar</button>
+                </form>
+                <div id="confirmationSection" style="display: none;">
+                    <h2>Confirmar Datos</h2>
+                    <p>Nombre de Usuario: <span id="confirmUsername"></span></p>
+                    <p>Monto: <span id="confirmAmount"></span></p>
+                    <p>Fecha de Creación: <span id="confirmCreatedDate"></span></p>
+                    <p>Acceso Hasta: <span id="confirmAccessUntil"></span></p>
+                    <button type="button" class="btn btn-secondary" id="editButton">Editar</button>
+                    <button type="button" class="btn btn-success" id="submitButton">Confirmar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        (function () {
+            'use strict';
+
+            window.addEventListener('load', function () {
+                var forms = document.getElementsByClassName('needs-validation');
+                Array.prototype.filter.call(forms, function (form) {
+                    form.addEventListener('submit', function (event) {
+                        if (form.checkValidity() === false) {
+                            event.preventDefault();
+                            event.stopPropagation();
+                        }
+                        form.classList.add('was-validated');
+                    }, false);
+                });
+            }, false);
+
+            // Preview button logic
+            document.getElementById('previewButton').addEventListener('click', function () {
+                var username = document.getElementById('username').value;
+                var amount = document.getElementById('amount').value;
+                var createdDate = document.getElementById('createdDate').value;
+                var accessUntil = document.getElementById('accessUntil').value;
+
+                document.getElementById('confirmUsername').textContent = username;
+                document.getElementById('confirmAmount').textContent = amount;
+                document.getElementById('confirmCreatedDate').textContent = createdDate;
+                document.getElementById('confirmAccessUntil').textContent = accessUntil;
+
+                document.getElementById('updatePaymentForm').style.display = 'none';
+                document.getElementById('confirmationSection').style.display = 'block';
+            });
+
+            // Edit button logic
+            document.getElementById('editButton').addEventListener('click', function () {
+                document.getElementById('updatePaymentForm').style.display = 'block';
+                document.getElementById('confirmationSection').style.display = 'none';
+            });
+
+            // Submit button logic
+            document.getElementById('submitButton').addEventListener('click', function () {
+                document.getElementById('updatePaymentForm').submit();
+            });
+
+        })();
+    </script>
+</body>
+
+</html>

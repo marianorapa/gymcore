@@ -2,6 +2,7 @@ package com.mrapaport.gymcore.payments;
 
 import com.mrapaport.gymcore.payments.model.Payment;
 import com.mrapaport.gymcore.payments.model.PaymentBuilder;
+import com.mrapaport.gymcore.payments.model.PaymentDto;
 import com.mrapaport.gymcore.payments.model.PaymentPlanCost;
 import com.mrapaport.gymcore.payments.model.PaymentsWithSummary;
 import com.mrapaport.gymcore.payments.model.PromotionAssignment;
@@ -94,6 +95,14 @@ public class PaymentService {
         }
 
         return new PaymentsWithSummary(payments, PaymentUtils.buildSummaryByType(payments));
+    }
+
+    public Payment updatePayment(UUID paymentId, PaymentDto paymentUpdates) {
+        var paymentOpt = repository.findById(paymentId);
+        return paymentOpt.map(payment -> {
+            payment.setAccessUntil(LocalDate.parse(paymentUpdates.getAccessUntil()).atStartOfDay());
+            return repository.save(payment);
+        }).orElseThrow();
     }
     
 }

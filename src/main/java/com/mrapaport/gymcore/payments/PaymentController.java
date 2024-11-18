@@ -1,6 +1,7 @@
 package com.mrapaport.gymcore.payments;
 
 import com.mrapaport.gymcore.payments.model.Payment;
+import com.mrapaport.gymcore.payments.model.PaymentDto;
 import com.mrapaport.gymcore.payments.model.enums.PaymentStatus;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.data.domain.Page;
@@ -12,6 +13,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -47,6 +49,13 @@ public class PaymentController {
         return "payment_info";
     }
 
+    @GetMapping("/edit-payment/{id}")
+    public String editPayment(@PathVariable UUID id, Model model) {
+        Payment payment = paymentService.findById(id);
+        model.addAttribute("payment", payment);
+        return "edit_payment";
+    }
+
     @PostMapping("/update-payment-status")
     public String updatePaymentStatus(@RequestParam UUID paymentId,
             @RequestParam PaymentStatus status, HttpServletResponse response) {
@@ -54,6 +63,12 @@ public class PaymentController {
         String userId = paymentService.findUserByPaymentId(paymentId).getId().toString();
         response.setHeader("Refresh", "0; URL=/user-info/" + userId);
         return "redirect:/user-info/" + userId;
+    }
+
+    @PostMapping("/update-payment/{id}")
+    public String updatePayment(@PathVariable UUID id, @ModelAttribute PaymentDto payment,  HttpServletResponse response) {
+        Payment result = paymentService.updatePayment(id, payment);
+        return "redirect:/user-info/" + result.getUser().getId();
     }
 
     @PostMapping("/create-payment/{userId}")

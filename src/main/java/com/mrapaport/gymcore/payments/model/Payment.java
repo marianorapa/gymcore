@@ -10,9 +10,11 @@ import lombok.EqualsAndHashCode;
 
 import jakarta.persistence.*;
 import java.text.NumberFormat;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
+import org.springframework.format.annotation.DateTimeFormat;
 
 @Entity
 @Table(name = "payments")
@@ -38,6 +40,7 @@ public class Payment extends BaseEntity {
     private PaymentStatus status;
 
     @Column(name = "access_until")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDateTime accessUntil;
 
     @ManyToOne
@@ -67,5 +70,9 @@ public class Payment extends BaseEntity {
 
     public String getDiscountPercentage() {
         return promoAssignment != null ? promoAssignment.getPromotion().getDiscountPercentage().toString() + "%" : "";
+    }
+
+    public LocalDate accessUntilDate() {
+        return accessUntil.toLocalDate();
     }
 }

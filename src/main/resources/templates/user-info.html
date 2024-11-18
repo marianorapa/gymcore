@@ -106,6 +106,7 @@
                     <th>Válido hasta</th>
                     <th>Costo del plan</th>
                     <th>Importe pago</th>
+                    <th>Acción</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -114,6 +115,11 @@
                     <td th:text="${payment.accessUntilPretty()}"></td>
                     <td th:text="${payment.paymentPlanCost.amountPretty()}"></td>
                     <td th:text="${payment.amountPretty()}"></td>
+                    <td>
+                        <a th:href="@{/edit-payment/{id}(id=${payment.id})}" class="btn btn-warning btn-sm ml-2">
+                            <i class="fas fa-edit"></i>
+                        </a>
+                    </td>
                 </tr>
                 </tbody>
             </table>
