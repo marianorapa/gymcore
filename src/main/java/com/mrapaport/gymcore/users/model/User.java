@@ -73,7 +73,10 @@ public class User extends BaseEntity {
     }
 
     public boolean hasValidAccess() {
-        return Optional.ofNullable(payments).map(existingPayments -> existingPayments.stream().max(Comparator.comparing(Payment::getAccessUntil)).map(Payment::isCurrentlyValid)
+        return Optional.ofNullable(payments)
+                .map(existingPayments -> existingPayments.stream()
+                    .filter(payment -> !payment.isCancelled())
+                    .max(Comparator.comparing(Payment::getAccessUntil)).map(Payment::isCurrentlyValid)
                 .orElse(false)).orElse(false);
     }
 

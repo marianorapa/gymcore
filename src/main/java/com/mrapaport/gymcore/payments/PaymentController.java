@@ -56,6 +56,14 @@ public class PaymentController {
         return "edit_payment";
     }
 
+    @GetMapping("/delete-payment/{id}")
+    public String deletePayment(@PathVariable UUID id, Model model, RedirectAttributes redirectAttributes) {
+        Payment payment = paymentService.cancelPayment(id);
+        redirectAttributes.addFlashAttribute("successMessage", "El pago ha sido eliminado");
+
+        return "redirect:/user-info/" + payment.getUser().getId();
+    }
+
     @PostMapping("/update-payment-status")
     public String updatePaymentStatus(@RequestParam UUID paymentId,
             @RequestParam PaymentStatus status, HttpServletResponse response) {

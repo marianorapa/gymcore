@@ -61,7 +61,11 @@ public class Payment extends BaseEntity {
     }
 
     public boolean isCurrentlyValid() {
-        return LocalDateTime.now().isBefore(accessUntil);
+        return LocalDateTime.now().isBefore(accessUntil) && !isCancelled();
+    }
+
+    public boolean isCancelled() {
+        return PaymentStatus.CANCELLED.equals(this.getStatus());
     }
 
     public boolean hasPromo() {
